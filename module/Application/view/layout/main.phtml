@@ -1,16 +1,15 @@
 <?php echo $this->partial('layout/_head.phtml'); ?>
-<!-- Add your site or application content here -->
-<div id="container" class="twocol">
-    <div id="search-result">
+    <!-- Add your site or application content here -->
+<div id="container">
+    <header id="page-header" class="clearfix">
+        <h1>k<span>i</span>v<span>!</span></h1>
+        <h2>Reference generator</h2>
+    </header>
+    <div id="search">
         <?php echo $this->partial('forms/search-form.phtml', array(
             'query' => $this->query,
             'action' => $this->url('search')
         )); ?>
     </div> <!-- #search -->
-    <header id="page-header" class="clearfix">
-        <h1>k<span>i</span>v<span>!</span></h1>
-        <h2>Reference generator</h2>
-    </header>
     <?php echo $this->content; ?>
-    <?php echo $this->side; ?>
 <?php echo $this->partial('layout/_foot.phtml');
