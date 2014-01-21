@@ -163,6 +163,10 @@ class OrderedList  implements ArrayAccess, Iterator, Countable
     public function offsetSet($offset, $value)
     {
         $offset = (string) $offset;
+        if(!in_array($offset, $this->data)) {
+            $this->order[] = $offset;
+        }
+        $this->data[$offset] = $value;
     }
 
     /**
@@ -176,7 +180,16 @@ class OrderedList  implements ArrayAccess, Iterator, Countable
      */
     public function offsetUnset($offset)
     {
-        // TODO: Implement offsetUnset() method.
+        if(!isset($this->data[$offset])) {
+            return;
+        }
+
+        unset($this->data[$offset]);
+        if(in_array($offset, $this->order)) {
+            $index = array_keys($this->order, $offset)[0];
+            array_splice($this->order, $index, 1);
+        }
+
     }
 
     /**
@@ -193,14 +206,60 @@ class OrderedList  implements ArrayAccess, Iterator, Countable
         return count($this->data);
     }
 
-    public function changeKeyOrder($key, $index)
+    /**
+     * Changes the order of the element with the key value
+     *
+     * @param string $key
+     * @param int $newIndex
+     * @return bool status of the change
+     * @throws \InvalidArgumentException
+     */
+    public function changeKeyOrder($key, $newIndex)
     {
+        $key = (string) $key;
+        if(!is_string($key)) {
+            throw new \InvalidArgumentException('key value must be a string in associative array');
+        }
+        if(!in_array($key, $this->order)) {
+            return false;
+        }
+        $oldIndex = array_keys($this->order, $key)[0];
 
+        return $this->changeIndex($oldIndex, $newIndex);
     }
 
-    public function changeOrder($from, $to)
+    /**
+     * Changes the order of the element with the index given as oldIndex
+     *
+     * @param int $oldIndex
+     * @param int $newIndex
+     * @return bool
+     * @throws \OutOfBoundsException
+     */
+    public function changeIndex($oldIndex, $newIndex)
     {
+        $oldIndex = (int) $oldIndex;
+        $newIndex = (int) $newIndex;
 
+        $maxIndex = count($this->order) - 1;
+
+        if($oldIndex > $maxIndex || $oldIndex < 0) {
+            throw new \OutOfBoundsException("oldIndex value is out of bounds");
+        }
+
+        if($newIndex < 0) {
+            throw new \OutOfBoundsException("newIndex value is out of bounds");
+        }
+
+        $removedElement = array_splice($this->order, $oldIndex, 1);
+
+        $maxIndex = count($this->order) - 1;
+        if($newIndex > $maxIndex) {
+            $this->order[] = $removedElement[0];
+        } else {
+            array_splice($this->order, $newIndex, 0, $removedElement);
+        }
+        return true;
     }
 
 } 

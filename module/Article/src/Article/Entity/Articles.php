@@ -13,9 +13,6 @@ class Articles implements Countable, IteratorAggregate, ArrayAccess {
     /** @var Article[] */
     protected $data = array();
 
-    /** @var int */
-    protected $count;
-
     /** @var HydratorInterface */
     protected $hydrator;
 
@@ -33,7 +30,6 @@ class Articles implements Countable, IteratorAggregate, ArrayAccess {
                     $this->data[$article->getId()] = $article;
                 }
             }
-            $this->count = count($this->data);
         }
 
     }
@@ -51,10 +47,7 @@ class Articles implements Countable, IteratorAggregate, ArrayAccess {
      */
     public function count()
     {
-        if($this->count === null) {
-            $this->count = count($this->data);
-        }
-        return $this->count;
+        return count($this->data);
     }
 
     /**
@@ -100,7 +93,6 @@ class Articles implements Countable, IteratorAggregate, ArrayAccess {
             throw new \InvalidArgumentException('value must be an instance of article or an array');
         }
         $this->data[$offset] = $value;
-        $this->count = count($this->data);
     }
 
     /**
@@ -110,7 +102,6 @@ class Articles implements Countable, IteratorAggregate, ArrayAccess {
     {
         if(isset($this->data[$offset])) {
             unset($this->data[$offset]);
-            $this->count = count($this->data);
         }
     }
 

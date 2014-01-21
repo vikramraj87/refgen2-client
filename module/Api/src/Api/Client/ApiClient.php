@@ -12,7 +12,7 @@ class ApiClient
 {
     protected static $client = null;
 
-    protected static $host = 'http://api.refgen.loc';
+    protected static $host = 'http://api.kivirefgen.com';
     protected static $getList = '/pubmed/term/%s/%d';
     protected static $get = '/pubmed/id/%s';
 
