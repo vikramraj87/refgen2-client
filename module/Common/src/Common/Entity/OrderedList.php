@@ -1,5 +1,5 @@
 <?php
-namespace Application\Entity;
+namespace Common\Entity;
 use \ArrayAccess;
 use \Iterator;
 use \Countable;

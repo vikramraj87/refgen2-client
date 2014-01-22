@@ -6,9 +6,9 @@
  * Time: 5:36 PM
  */
 
-namespace ApplicationTest\Entity;
+namespace CommonTest\Entity;
 
-use Application\Entity\OrderedList;
+use Common\Entity\OrderedList;
 use PHPUnit_Framework_TestCase;
 
 class OrderedListTest extends PHPUnit_Framework_TestCase

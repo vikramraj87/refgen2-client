@@ -4,7 +4,8 @@ return array(
     'modules' => array(
         'Application',
         'Api',
-        'Article'
+        'Article',
+        'Common'
     ),
 
     // These are various options for the listeners attached to the ModuleManager
