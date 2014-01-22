@@ -50,7 +50,7 @@ class SearchController extends AbstractActionController
 
             $logger->debug(sprintf('Searched with %s', $term));
 
-            $viewModel->setTemplate('application/search/no-result');
+            $viewModel->setTemplate('application/search/no-results');
             return $viewModel;
         }
 
