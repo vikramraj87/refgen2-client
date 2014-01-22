@@ -1,0 +1,36 @@
+        <?php $viewMore = false; ?>
+        <?php $id = $article->getId(); ?>
+        <article>
+            <header>
+                <h2><?php echo $article->getTitle(); ?></h2>
+                <?php $authors = $article->getAuthors(); ?>
+                <?php if(empty($authors)): ?>
+                    <h3>[No authors listed]</h3>
+                <?php else: ?>
+                    <h3><?php echo implode(", ", $authors); ?></h3>
+                <?php endif; ?>
+            </header>
+            <?php $abstract = $article->getAbstract(); ?>
+            <?php if(count($abstract)): ?>
+                <div class="abstract clearfix">
+                    <h3>Abstract</h3>
+                <?php $abstract_content = implode(" ", $abstract); ?>
+                <?php $abstract_truncated = $this->truncate($abstract_content); ?>
+                <?php if(($abstract_content != $abstract_truncated) || count($abstract) > 1) {
+                    $viewMore = true;
+                } ?>
+                    <p><?php echo $abstract_truncated; ?></p>
+                <?php if($viewMore): ?>
+                    <p class="read-more"><a href="<?php echo $this->url('search', array('term' => $id)); ?>">read more</a></p>
+                <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <footer>
+
+                <p class="pmid">PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
+                <p>Cite by: <span class="citation"><?php echo $article->getCitation(); ?></span></p>
+                <p class="add-to-list">
+                    <a href="#" data-pmid="<?php echo $id; ?>">+</a>
+                </p>
+            </footer>
+        </article>

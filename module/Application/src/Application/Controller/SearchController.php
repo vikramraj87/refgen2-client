@@ -2,12 +2,10 @@
 namespace Application\Controller;
 
 use Article\Entity\Article;
-use Zend\Log\Logger;
-use Zend\Log\Writer\Stream;
 use Zend\Mvc\Controller\AbstractActionController;
 use Api\Client\ApiClient;
-use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Zend\View\Model\ViewModel;
+use Api\Exception\ApiException;
 
 class SearchController extends AbstractActionController
 {
@@ -28,22 +26,16 @@ class SearchController extends AbstractActionController
         $page = $this->params()->fromRoute('page', '');
         $page = $page ?: $this->params()->fromQuery('page', 1);
 
-
-
         $result = null;
 
         if(preg_match('/^\d+$/', $term)) {
-            $result = ApiClient::get($term);
+            $result = ApiClient::getArticle($term);
         } else {
-            $result = ApiClient::getByTerm($term, $page);
+            $result = ApiClient::getArticles($term, $page);
         }
 
-        if(!is_array($result)  || empty($result)) {
-            // TODO:
-            // something went wrong
-            // redirect the user to error page
-            // based on the log. find out the type
-            // of errors
+        if(!is_array($result) || empty($result)) {
+            throw new ApiException('Api server error: no resultset returned');
         }
 
         $this->layout()->setVariable('query', $term);
@@ -53,46 +45,37 @@ class SearchController extends AbstractActionController
         $viewModel = new ViewModel();
 
         if($count === 0) {
-            // zero results
-            // log the term
-        } else if($count === 1) {
-            $article = $result['results'][0];
-            $hydrator = new ClassMethodsHydrator;
-            $article = $hydrator->hydrate($article, new Article());
-            $viewModel->setTemplate('application/search/single-result');
-            $viewModel->article = $article;
-        } else {
+            /** @var \Zend\Log\Logger $logger */
+            $logger = $this->getServiceLocator()->get('zero_results_log');
 
-        }
-        return $viewModel;
-        /*
+            $logger->debug(sprintf('Searched with %s', $term));
 
-
-
-
-        $hydrator = new ClassMethodsHydrator;
-
-        if(count($result) == 1) {
-            $article = $hydrator->hydrate($result[0], new Article());
-            $viewModel->setTemplate('application/search/single-result');
-            $viewModel->article = $article;
-        } else {
-
-        }
-
-        /*
-        if(count($articles) === 1) {
-            $viewModel->setTemplate('application/search/single-result');
-            $tmp = $articles->getData();
-            $article = $tmp[0];
-            var_dump($article);
-            $viewModel->setVariable('article', $article);
+            $viewModel->setTemplate('application/search/no-result');
             return $viewModel;
         }
 
-        $viewModel->setVariable('articles', $articles);
+        /** @var \Zend\Stdlib\Hydrator\ClassMethods $hydrator */
+        $hydrator = $this->getServiceLocator()->get('article_hydrator');
 
-        */
-        //return $viewModel;
+        /** @var \Zend\Di\Di $di */
+        $di = $this->getServiceLocator()->get('app_di');
+
+        if($count === 1) {
+            /** @var array|Article $article */
+            $article = $result['results'][0];
+            $article = $hydrator->hydrate($article, $di->get('Article\Entity\Article'));
+            $viewModel->setTemplate('application/search/single-result');
+            $viewModel->article = $article;
+
+        } else {
+            $articles = array();
+            foreach($result['results'] as $articleData) {
+                /** @var Article $article */
+                $article = $hydrator->hydrate($articleData, $di->get('Article\Entity\Article'));
+                $articles[] = $article;
+            }
+            $viewModel->articles = $articles;
+        }
+        return $viewModel;
     }
 }

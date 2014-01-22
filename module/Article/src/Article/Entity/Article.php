@@ -1,7 +1,8 @@
 <?php
 namespace Article\Entity;
 
-
+use Article\Entity\Citation\CitationInterface;
+use \RuntimeException;
 class Article {
     const PUBLISHED      = 1;
     const AHEAD_OF_PRINT = 2;
@@ -56,6 +57,9 @@ class Article {
 
     /** @var int indicating publication status as defined by constants of the class */
     protected $pubStatus;
+
+    /** @var CitationInterface */
+    protected $citationGenerator = null;
 
     /**
      * @param array $abstract
@@ -338,5 +342,18 @@ class Article {
     public function getYear()
     {
         return $this->year;
+    }
+
+    public function setCitationGenerator(Citation\CitationInterface $generator)
+    {
+        $this->citationGenerator = $generator;
+    }
+
+    public function getCitation()
+    {
+        if($this->citationGenerator === null) {
+            throw new RuntimeException('Citation generator not injected into article');
+        }
+        return $this->citationGenerator->getCitation($this);
     }
 }

@@ -26,13 +26,13 @@ class ApiClient
         return self::$client;
     }
 
-    public static function get($id)
+    public static function getArticle($id)
     {
         $uri = self::$host . sprintf(self::$get, $id);
         return self::doRequest($uri);
     }
 
-    public static function getByTerm($term, $page = 1)
+    public static function getArticles($term, $page = 1)
     {
         $page = (int) $page;
         $uri = self::$host . sprintf(self::$getList, $term, $page);

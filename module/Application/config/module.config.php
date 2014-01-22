@@ -71,6 +71,40 @@ return array(
         'aliases' => array(
             'translator' => 'MvcTranslator',
         ),
+        'invokables' => array(
+            'citation_generator' => 'Article\Entity\Citation\Vancouver',
+            'article_hydrator'   => 'Zend\Stdlib\Hydrator\ClassMethods'
+        ),
+        'factories' => array(
+            'app_di' => function($sm) {
+                $di = new \Zend\Di\Di();
+                $config = new \Zend\Di\Config(array(
+                    'definition' => array(
+                        'class' => array(
+                            'Article\Entity\Article' => array(
+                                'setCitationGenerator' => array(
+                                    'required' => true
+                                )
+                            )
+                        )
+                    ),
+                    'instance' => array(
+                        'preference' => array(
+                            'Article\Entity\Citation\CitationInterface' =>
+                                'Article\Entity\Citation\Vancouver'
+                        )
+                    )
+                ));
+                $di->configure($config);
+                return $di;
+            },
+            'zero_results_log' => function($sm) {
+                    $log = new \Zend\Log\Logger();
+                    $writer = new \Zend\Log\Writer\Stream('data/logs/zeroresults.log');
+                    $log->addWriter($writer);
+                    return $log;
+                }
+        ),
     ),
     'translator' => array(
         'locale' => 'en_US',
@@ -102,6 +136,14 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+    ),
+    'results' => array(
+        'max_results' => 10
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'truncate' => 'Application\View\Helper\Truncate'
+        )
     ),
     // Placeholder for console routes
     'console' => array(

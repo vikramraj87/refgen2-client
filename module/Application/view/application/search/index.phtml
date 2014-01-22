@@ -1,5 +1,4 @@
 <section id="results">
-    <?php echo $this->type; ?>
-    <?php var_dump($this->result); ?>
-    <?php echo $this->page; ?>
+    <?php $this->partialLoop()->setObjectKey('article'); ?>
+    <?php echo $this->partialLoop('application/search/_article.phtml', $articles); ?>
 </section>

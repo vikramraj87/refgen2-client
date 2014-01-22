@@ -29,7 +29,7 @@
             <footer>
                 <?php $id = $article->getId(); ?>
                 <p class="pmid">PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
-                <p>Cite by: </p>
+                <p>Cite by: <span class="citation"><?php echo $article->getCitation(); ?></span></p>
                 <p class="add-to-list">
                     <a href="#" data-pmid="<?php echo $id; ?>">+</a>
                 </p>
