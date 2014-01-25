@@ -5,7 +5,8 @@ return array(
         'Application',
         'Api',
         'Article',
-        'Common'
+        'Common',
+        'Citation'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

@@ -1,4 +1,13 @@
 <section id="results">
+    <?php $articles = $this->paginator; ?>
     <?php $this->partialLoop()->setObjectKey('article'); ?>
     <?php echo $this->partialLoop('application/search/_article.phtml', $articles); ?>
+    <?php echo $this->paginationControl(
+        $this->paginator,
+        'Sliding',
+        'pagination/_control.phtml',
+        array(
+            'route' => 'search',
+            'term'  => $this->term
+        )); ?>
 </section>

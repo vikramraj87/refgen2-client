@@ -29,8 +29,17 @@
 
                 <p class="pmid">PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
                 <p>Cite by: <span class="citation"><?php echo $article->getCitation(); ?></span></p>
+
+                <?php $redirectUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); ?>
+
                 <p class="add-to-list">
-                    <a href="#" data-pmid="<?php echo $id; ?>">+</a>
+                    <a href="<?php echo $this->url(
+                        'citation\add',
+                        array('id' => $id));
+                    ?>?redirect=<?php echo $redirectUrl; ?>"
+                       data-id="<?php echo $id; ?>">
+                        +
+                    </a>
                 </p>
             </footer>
         </article>

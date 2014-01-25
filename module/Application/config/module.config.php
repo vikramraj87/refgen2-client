@@ -26,7 +26,8 @@ return array(
                     'route' => '/search[/:term][/:page]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Search',
-                        'action'     => 'index'
+                        'action'     => 'index',
+                        'page'       => 1
                     )
                 )
             )
@@ -63,49 +64,6 @@ return array(
             ), */
         ),
     ),
-    'service_manager' => array(
-        'abstract_factories' => array(
-            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
-            'Zend\Log\LoggerAbstractServiceFactory',
-        ),
-        'aliases' => array(
-            'translator' => 'MvcTranslator',
-        ),
-        'invokables' => array(
-            'citation_generator' => 'Article\Entity\Citation\Vancouver',
-            'article_hydrator'   => 'Zend\Stdlib\Hydrator\ClassMethods'
-        ),
-        'factories' => array(
-            'app_di' => function($sm) {
-                $di = new \Zend\Di\Di();
-                $config = new \Zend\Di\Config(array(
-                    'definition' => array(
-                        'class' => array(
-                            'Article\Entity\Article' => array(
-                                'setCitationGenerator' => array(
-                                    'required' => true
-                                )
-                            )
-                        )
-                    ),
-                    'instance' => array(
-                        'preference' => array(
-                            'Article\Entity\Citation\CitationInterface' =>
-                                'Article\Entity\Citation\Vancouver'
-                        )
-                    )
-                ));
-                $di->configure($config);
-                return $di;
-            },
-            'zero_results_log' => function($sm) {
-                    $log = new \Zend\Log\Logger();
-                    $writer = new \Zend\Log\Writer\Stream('data/logs/zeroresults.log');
-                    $log->addWriter($writer);
-                    return $log;
-                }
-        ),
-    ),
     'translator' => array(
         'locale' => 'en_US',
         'translation_file_patterns' => array(
@@ -138,7 +96,8 @@ return array(
         ),
     ),
     'results' => array(
-        'max_results' => 10
+        'max_results' => 10,
+        'page_range'  => 10
     ),
     'view_helpers' => array(
         'invokables' => array(

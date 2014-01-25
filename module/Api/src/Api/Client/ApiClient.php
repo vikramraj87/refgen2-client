@@ -15,7 +15,7 @@ class ApiClient
 {
     protected static $client = null;
 
-    protected static $host = 'http://api.kivirefgen.com';
+    protected static $host = 'http://api.refgen.loc';
     protected static $getList = '/pubmed/term/%s/%d';
     protected static $get = '/pubmed/id/%s';
 
@@ -24,7 +24,6 @@ class ApiClient
     {
         if(self::$client === null) {
             self::$client = new Client();
-            self::$client->setEncType(Client::ENC_URLENCODED);
         }
         return self::$client;
     }
@@ -49,6 +48,7 @@ class ApiClient
 
     public static function getArticles($term, $page = 1)
     {
+        $term = urlencode($term);
         $page = (int) $page;
         $uri = self::$host . sprintf(self::$getList, $term, $page);
         $results = self::doRequest($uri);

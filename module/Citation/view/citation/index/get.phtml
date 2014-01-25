@@ -1,0 +1,9 @@
+        <div id="citations-preview">
+            <h2>Citations</h2>
+            <ol id="citations">
+
+            <?php foreach($this->list as $article): ?>
+                <li><?php echo $article->getCitation(); ?></li>
+            <?php endforeach; ?>
+            </ol>
+        </div>

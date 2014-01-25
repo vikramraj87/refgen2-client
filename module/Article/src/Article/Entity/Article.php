@@ -356,4 +356,27 @@ class Article {
         }
         return $this->citationGenerator->getCitation($this);
     }
+
+    public function toArray()
+    {
+        return array(
+            'id'           => (int) $this->getId(),
+            'volume'       =>       $this->getVolume(),
+            'issue'        =>       $this->getIssue(),
+            'year'         =>       $this->getYear(),
+            'month'        =>       $this->getMonth(),
+            'day'          =>       $this->getDay(),
+            'pages'        =>       $this->getPages(),
+            'issn'         =>       $this->getIssn(),
+            'journal'      =>       $this->getJournal(),
+            'journal_abbr' =>       $this->getJournalAbbr(),
+            'title'        =>       $this->getTitle(),
+            'abstract'     =>       $this->getAbstract(),
+            'affiliation'  =>       $this->getAffiliation(),
+            'authors'      =>       $this->getAuthors(),
+            'article_id'   =>       $this->getArticleId(),
+            'keywords'     =>       $this->getKeywords(),
+            'pub_status'   =>       $this->getPubStatus()
+        );
+    }
 }

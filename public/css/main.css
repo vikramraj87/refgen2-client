@@ -293,7 +293,6 @@ input[type=submit] {
 .twocol section {
     float:left;
     width:665px;
-    clear:both;
 }
 
 #results {
@@ -401,17 +400,20 @@ article footer p {
 #sidebar {
     position: relative;
 	float: right;
-	width: 315px;
-	background:#fff;
-	padding:13px;
-	margin-top:6px;
-	border-radius:10px;
-	box-shadow:1px 1px 2px 1px #ccc;
-	border:1px solid;
-	border-color:#ddd #aaa #aaa #ddd;
+	width: 350px;
 }
 
-#sidebar h2 {
+#sidebar .widget {
+    background:#fff;
+    padding:13px;
+    margin-top:6px;
+    border-radius:10px;
+    box-shadow:1px 1px 2px 1px #ccc;
+    border:1px solid;
+    border-color:#ddd #aaa #aaa #ddd;
+}
+
+.widget h2 {
 	font-size:1.6em;
 	text-transform:none;
 	line-height:25px;
@@ -419,19 +421,19 @@ article footer p {
 }
 
 
-#sidebar ol {
+.widget ol {
 	list-style-type:decimal;
 	margin: 0;
     padding: 0;
     list-style-position: inside;
     font-size: 12px;
 }
-#sidebar ol li {
+.widget ol li {
 	padding:10px 0;
     border-bottom:1px solid #ddd;
     position: relative;
 }
-#sidebar ol li a:link, #sidebar ol li a:visited {
+.widget ol li a:link, .widget ol li a:visited {
     position: absolute;
     line-height: 12px;
     top:2px;
@@ -440,25 +442,25 @@ article footer p {
     margin: 0;
     display: inline-block;
 }
-#sidebar ol li a:hover, #sidebar ol li a:active {
+.widget ol li a:hover, .widget ol li a:active {
     background-color: #fbb900;
     color:#fff;
 }
 
-#sidebar ol li:last-child {
+.widget ol li:last-child {
     border-bottom:none;
 }
 
-#sidebar ol li.drag-over {
+.widget ol li.drag-over {
 	background-color:#666;
 	color:#fff;
 }
-#sidebar ol li.dragged {
+.widget ol li.dragged {
 	background-color:transparent;
 	opacity:0.4;
 	color:#333;
 }
-#sidebar #options a {
+.widget #options a {
     display: inline-block;
     float: right;
     padding: 0;

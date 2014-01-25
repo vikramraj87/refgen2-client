@@ -6,6 +6,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Api\Client\ApiClient;
 use Zend\View\Model\ViewModel;
 use Api\Exception\ApiException;
+use Application\Entity\ArticlesAdapter;
+use Zend\Paginator\Paginator;
 
 class SearchController extends AbstractActionController
 {
@@ -17,6 +19,7 @@ class SearchController extends AbstractActionController
 
         // filter search term
         $term = trim(strip_tags($term));
+        $term = urldecode($term);
 
         // if empty redirect to home page
         if($term === '') {
@@ -24,7 +27,7 @@ class SearchController extends AbstractActionController
         }
 
         $page = $this->params()->fromRoute('page', '');
-        $page = $page ?: $this->params()->fromQuery('page', 1);
+        $page = $page ?: $this->params()->fromQuery('page');
 
         $result = null;
 
@@ -71,10 +74,23 @@ class SearchController extends AbstractActionController
             $articles = array();
             foreach($result['results'] as $articleData) {
                 /** @var Article $article */
-                $article = $hydrator->hydrate($articleData, $di->get('Article\Entity\Article'));
+                $article = $hydrator->hydrate($articleData, $di->newInstance('Article\Entity\Article'));
                 $articles[] = $article;
             }
-            $viewModel->articles = $articles;
+
+            $paginationAdapter = new ArticlesAdapter($articles);
+            $paginationAdapter->setCount($count);
+
+            $paginator = new Paginator($paginationAdapter);
+            $paginator->setCurrentPageNumber($page);
+
+            $config = $this->getServiceLocator()->get('config');
+            $resultsConfig = $config['results'];
+            $paginator->setItemCountPerPage($resultsConfig['max_results']);
+            $paginator->setPageRange($resultsConfig['page_range']);
+            $viewModel->paginator = $paginator;
+
+            $viewModel->term = $term;
         }
         return $viewModel;
     }
