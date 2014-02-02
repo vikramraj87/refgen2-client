@@ -3,15 +3,13 @@ namespace Citation\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
-use Api\Client\ApiClient;
-use Common\Entity\OrderedList;
-use Zend\Stdlib\Hydrator\ClassMethods;
-use Zend\View\Model\ViewModel;
+use Citation\Form\CreateForm;
+use Citation\Form\CitationFilter;
 use Citation\Service\CitationService;
+use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
-    protected $activeList = null;
     protected $citationService = null;
 
     public function addAction()
@@ -49,6 +47,53 @@ class IndexController extends AbstractActionController
     }
 
     public function getAction()
+    {
+        $id = $this->params()->fromRoute('id');
+
+        if($id === 0) {
+            $this->redirect()->toRoute('home');
+        }
+
+        $service = $this->getCitationService();
+        $collection = $service->getCollection($id);
+        return array(
+            'collection' => $collection
+        );
+    }
+
+    public function createAction()
+    {
+        $form = new CreateForm();
+        return array(
+            'form' => $form
+        );
+    }
+
+    public function saveAction()
+    {
+        $request = $this->getRequest();
+        if(!$request->isPost()) {
+            return $this->redirect()->toRoute('citation/default', array('action' => 'create'));
+        }
+        $data = $request->getPost()->toArray();
+
+        $form   = new CreateForm();
+        $filter = new CitationFilter();
+        $form->setInputFilter($filter);
+
+        $form->setData($data);
+
+        if(!$form->isValid()) {
+            $viewModel = new ViewModel();
+            $viewModel->setTemplate('citation/index/create.phtml');
+            $viewModel->form = $form;
+            $viewModel->msg = $form->getMessages();
+            return $viewModel;
+        }
+
+    }
+
+    public function updateAction()
     {
 
     }

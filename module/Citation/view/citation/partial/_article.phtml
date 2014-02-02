@@ -2,6 +2,9 @@
         <?php $article = $this->article; ?>
         <?php $id = $article->getId(); ?>
         <article>
+            <?php if(isset($this->name)): ?>
+            <h2>&quot;<?php echo $this->name; ?>&quot; collection</h2>
+            <?php endif; ?>
             <header>
                 <h2><?php echo $article->getTitle(); ?></h2>
                 <?php $authors = $article->getAuthors(); ?>
@@ -27,16 +30,7 @@
                 </div>
             <?php endif; ?>
             <footer>
-
                 <p class="pmid">PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
                 <p>Cite by: <span class="citation"><?php echo $article->getCitation(); ?></span></p>
-
-                <?php $redirectUrl = $this->url('search', array('term' => $this->term)); ?>
-                <?php $addUrl = $this->url('citation/add', array('id' => $id)); ?>
-                <?php $addUrl .= '?redirect=' . $redirectUrl; ?>
-
-                <p class="add-to-list">
-                    <a href="<?php echo $addUrl; ?>">+</a>
-                </p>
             </footer>
         </article>

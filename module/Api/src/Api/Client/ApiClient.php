@@ -24,6 +24,9 @@ class ApiClient
     {
         if(self::$client === null) {
             self::$client = new Client();
+            self::$client->setOptions(array(
+                'timeout' => 20
+            ));
         }
         return self::$client;
     }
@@ -54,6 +57,31 @@ class ApiClient
         $results = self::doRequest($uri);
         self::cacheResults($results);
         return $results;
+    }
+
+    public static function getCollection($id, $userId)
+    {
+        $id = abs((int) $id);
+        $userId = abs((int) $userId);
+
+        if($id === 0 || $userId === 0) {
+            throw new \RuntimeException('collection id and user id is not valid');
+        }
+
+        $uri = sprintf(self::$host . "/collection/%s/%s", $id, $userId);
+        return self::doRequest($uri);
+    }
+
+    public static function createCollection($data)
+    {
+        $name   = (string) $name;
+        $userId = abs((int) $userId);
+
+        if($userId === 0) {
+            throw new \RuntimeException('user id is not valid');
+        }
+
+        $uri = sprintf(self::$host . '/collection/create/%s/%s', $name, $userId);
     }
 
     protected static function doRequest($url, array $data = array(), $method = Request::METHOD_GET)

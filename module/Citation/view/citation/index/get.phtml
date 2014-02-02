@@ -1,9 +1,18 @@
-        <div id="citations-preview">
-            <h2>Citations</h2>
-            <ol id="citations">
-
-            <?php foreach($this->list as $article): ?>
-                <li><?php echo $article->getCitation(); ?></li>
-            <?php endforeach; ?>
-            </ol>
-        </div>
+        <section id="results">
+           <?php
+                /** @var \Citation\Entity\Collection $collection */
+                $collection = $this->collection;
+           ?>
+           <?php $first = true; ?>
+           <?php foreach($collection->getArticles() as $article): ?>
+                <?php if($first): ?>
+           <?php echo $this->partial('citation/partial/_article.phtml', array(
+                       'article' => $article,
+                       'name' => $collection->getName()
+           )); ?>
+                   <?php $first = false; ?>
+                <?php else: ?>
+           <?php echo $this->partial('citation/partial/_article.phtml', array('article' => $article)); ?>
+                <?php endif; ?>
+           <?php endforeach; ?>
+       </section>

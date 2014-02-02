@@ -8,9 +8,13 @@ use Zend\View\Model\ViewModel;
 use Api\Exception\ApiException;
 use Application\Entity\ArticlesAdapter;
 use Zend\Paginator\Paginator;
+use Api\Service\ApiService;
 
 class SearchController extends AbstractActionController
 {
+    /** @var null|ApiService */
+    protected $apiService = null;
+
     public function indexAction()
     {
         /** @var string $term search term as part of url or query string */
@@ -32,13 +36,9 @@ class SearchController extends AbstractActionController
         $result = null;
 
         if(preg_match('/^\d+$/', $term)) {
-            $result = ApiClient::getArticle($term);
+            $result = $this->getApiService()->getArticle($term);
         } else {
-            $result = ApiClient::getArticles($term, $page);
-        }
-
-        if(!is_array($result) || empty($result)) {
-            throw new ApiException('Api server error: no resultset returned');
+            $result = $this->getApiService()->search($term, $page);
         }
 
         $this->layout()->setVariable('query', $term);
@@ -89,9 +89,16 @@ class SearchController extends AbstractActionController
             $paginator->setItemCountPerPage($resultsConfig['max_results']);
             $paginator->setPageRange($resultsConfig['page_range']);
             $viewModel->paginator = $paginator;
-
-            $viewModel->term = $term;
         }
+        $viewModel->term = $term;
         return $viewModel;
+    }
+
+    public function getApiService()
+    {
+        if($this->apiService == null) {
+            $this->apiService = $this->getServiceLocator()->get('ApiService');
+        }
+        return $this->apiService;
     }
 }

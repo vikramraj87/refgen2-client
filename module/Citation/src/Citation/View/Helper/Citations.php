@@ -16,31 +16,16 @@ class Citations extends AbstractHelper
 
     public function __invoke()
     {
-        $output = '<div id="citations-preview" class="widget">';
-
-        $output .= '<h2>Citations</h2>';
-
         $list = $this->service->getAll();
 
         if(count($list)) {
-            $output .= '<ol id="citations">';
-            foreach($list as $article) {
-                $redirectUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-                $remUrl = $this->getView()->url('citation\remove', array('id' => $article->getId()));
-                $remUrl .= '?redirect=' . $redirectUrl;
-
-                $output .= '<li>' . $article->getCitation();
-                $output .= '<a href=' . $remUrl . ' data-id="' . $article->getId();
-                $output .= '">x</a></li>';
-            }
-            $output .= '</ol>';
+            return $this->getView()->partial('citation/partial/_collection.phtml', array(
+                'list' => $list,
+                'activeList' => $this->service->getActiveListId(),
+                'changed' => $this->service->isChanged()
+            ));
         } else {
-            $output .= '<p>Add references to build a numbered list. ';
-            $output .= 'Click the "+" button of the article to add the corresponding ';
-            $output .= 'reference to your collection.</p>';
+            return $this->getView()->partial('citation/partial/_empty.phtml');
         }
-        $output .= '</div>';
-        return $output;
     }
 } 

@@ -2,42 +2,63 @@
 return array(
     'router' => array(
         'routes' => array(
-            'citation\add' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
+            'citation' => array(
+                'type'    => 'literal',
                 'options' => array(
-                    'route' => '/citation/add/[:id]',
-                    'constraints' => array(
-                        'id' => '\d+'
-                    ),
+                    'route'    => '/citation',
                     'defaults' => array(
-                        'controller' => 'Citation\Controller\Index',
-                        'action'     => 'add'
+                        'controller' => 'Citation\Controller\Index'
                     )
-                )
-            ),
-            'citation\remove' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/citation/remove/[:id]',
-                    'constraints' => array(
-                        'id' => '\d+'
+                ),
+                'may_terminate' => false,
+                'child_routes' => array(
+                    'add' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/add/[:id]',
+                            'constraints' => array(
+                                'id' => '\d+'
+                            ),
+                            'defaults' => array(
+                                'id' => '0',
+                                'action' => 'add'
+                            )
+                        )
                     ),
-                    'defaults' => array(
-                        'controller' => 'Citation\Controller\Index',
-                        'action'     => 'remove'
-                    )
-                )
-            ),
-            'citation\get' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/citation/get',
-                    'constraints' => array(
-                        'id' => '\d+'
+                    'remove' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/remove/[:id]',
+                            'constraints' => array(
+                                'id' => '\d+'
+                            ),
+                            'defaults' => array(
+                                'id' => '0',
+                                'action' => 'remove'
+                            )
+                        )
                     ),
-                    'defaults' => array(
-                        'controller' => 'Citation\Controller\Index',
-                        'action'     => 'get'
+                    'get' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/get[/:id]',
+                            'constraints' => array(
+                                'id' => '\d+'
+                            ),
+                            'defaults' => array(
+                                'id' => '0',
+                                'action' => 'get'
+                            )
+                        )
+                    ),
+                    'default' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/[:action]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                        )
                     )
                 )
             )
