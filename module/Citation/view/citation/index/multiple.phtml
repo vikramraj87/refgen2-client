@@ -1,0 +1,21 @@
+<section id="results">
+    <?php $collection = $this->collection; ?>
+    <?php $articles   = $this->paginator; ?>
+    <?php $title      = $collection->getName(); ?>
+    <?php foreach($articles as $article): ?>
+        <?php echo $this->partial('citation/index/_article.phtml', array(
+            'article' => $article,
+            'title'   => $title
+        )); ?>
+        <?php $title = null; ?>
+    <?php endforeach; ?>
+
+    <?php echo $this->paginationControl(
+        $this->paginator,
+        'Sliding',
+        'citation/index/_pagination.phtml',
+        array(
+            'route' => 'citation/get',
+            'id'    => $collection->getId()
+        )); ?>
+</section>

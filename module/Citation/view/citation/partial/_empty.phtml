@@ -1,0 +1,22 @@
+        <div id="citations-preview" class="widget">
+            <?php
+                use Citation\Entity\ActiveCollection;
+                /** @var ActiveCollection $collection */
+                $collection = $this->collection; ?>
+
+            <?php
+            $title = 'Citations - ';
+            if($collection->getName() != '') {
+                $title .= '<a href="' . $this->url('citation/get', array('id' => $collection->getId())) . '">';
+                $title .= $this->collection->getName() . '</a>';
+            } else {
+                $title .= 'untitled';
+            }
+            if($collection->isChanged()) {
+                $title .= "*";
+            }
+            ?>
+            <h2><?php echo $title; ?></h2>
+            <p>Add references to build a numbered list. Click the "+" button of the article to add the corresponding reference to your collection.
+            </p>
+        </div>

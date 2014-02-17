@@ -1,0 +1,15 @@
+<?php
+    $form = $this->form;
+    $action = $_SERVER['REQUEST_URI'];
+    $form->setAttribute('action', $action);
+    $form->prepare();
+    echo $this->form()->openTag($form);
+?>
+    <p><?php echo $this->formLabel($form->get('name')); ?></p>
+    <p><?php echo $this->formElement($form->get('name')); ?></p>
+    <p><?php echo $this->formElementErrors($form->get('name')); ?></p>
+    <p><?php echo $this->formElement($form->get('action-save')); ?>
+       <?php echo $this->formElement($form->get('action-cancel')); ?></p>
+<?php
+    echo $this->form()->closeTag();
+?>

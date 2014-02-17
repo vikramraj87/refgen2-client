@@ -1,0 +1,40 @@
+    <?php $collection = $this->collection; ?>
+
+    <?php $articles   = $collection->getArticles(); ?>
+    <?php reset($articles); ?>
+    <?php $article   = current($articles); ?>
+    <section id="results">
+        <article>
+            <header>
+                <h2>Collection - <?php echo $collection->getName(); ?></h2>
+                <h2><?php echo $article->getTitle(); ?></h2>
+            <?php $authors = $article->getAuthors(); ?>
+            <?php if(empty($authors)): ?>
+                <h3>[No authors listed]</h3>
+            <?php else: ?>
+                <h3><?php echo implode(", ", $authors); ?></h3>
+            <?php endif; ?>
+            </header>
+            <?php $abstract = $article->getAbstract(); ?>
+            <?php if(count($abstract)): ?>
+            <div class="abstract clearfix">
+                <h3>Abstract</h3>
+                <?php if(count($abstract) === 1): ?>
+                    <p><?php echo $abstract[0]; ?></p>
+                <?php else: ?>
+                    <?php foreach($abstract as $h => $p): ?>
+                        <?php if(is_string($h)): ?>
+                    <h4><?php echo $h; ?></h4>
+                        <?php endif; ?>
+                    <p><?php echo $p; ?></p>
+                    <?php endforeach; ?>
+                <?php endif;?>
+            </div>
+            <?php endif; ?>
+            <footer>
+                <?php $id = $article->getId(); ?>
+                <p class="pmid">PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
+                <p>Cite by: <span class="citation"><?php echo $article->getCitation(); ?></span></p>
+            </footer>
+        </article>
+    </section>

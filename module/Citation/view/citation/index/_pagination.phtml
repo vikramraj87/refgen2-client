@@ -1,0 +1,48 @@
+        <?php if($this->pageCount): ?>
+        <ol id="pagination">
+            <!-- First page link -->
+            <?php if($this->current > 2): ?>
+            <li class="page first">
+                <a href="<?php echo $this->url($this->route, array(
+                    'id'   => $this->id,
+                    'page' => 1
+                )); ?>">&lt;&lt;</a>
+            </li>
+            <?php endif; ?>
+
+            <!-- Previous page link -->
+            <?php if(isset($this->previous)): ?>
+            <li class="page prev">
+                <a href="<?php echo $this->url($this->route, array(
+                    'id'   => $this->id,
+                    'page' => $this->previous
+                )); ?>">&lt;</a>
+            </li>
+            <?php endif; ?>
+
+            <!-- Numbered page links -->
+            <?php foreach($this->pagesInRange as $page): ?>
+            <li class="page num">
+                <?php if($page === $this->current){ ?>
+                <span><?php echo $page; ?></span>
+
+                <?php } else { ?>
+                <a href="<?php echo $this->url($this->route, array(
+                    'id'   => $this->id,
+                    'page' => $page
+                )); ?>"><?php echo $page; ?></a>
+                <?php } //endif ?>
+            </li>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <?php if(isset($this->next)): ?>
+            <li class="page prev">
+                <a href="<?php echo $this->url($this->route, array(
+                    'id'   => $this->id,
+                    'page' => $this->next
+                )); ?>">&gt;</a>
+            </li>
+            <?php endif; ?>
+        </ol>
+        <?php endif; ?>

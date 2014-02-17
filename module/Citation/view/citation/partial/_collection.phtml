@@ -1,0 +1,31 @@
+        <div id="citations-preview" class="widget">
+            <?php $collection = $this->collection; ?>
+
+            <?php
+                $title = 'Citations - ';
+                if($collection->getName() != '') {
+                    $title .= '<a href="' . $this->url('citation/get', array('id' => $collection->getId())) . '">';
+                    $title .= $this->collection->getName() . '</a>';
+                } else {
+                    $title .= 'untitled';
+                }
+                if($collection->isChanged()) {
+                    $title .= "*";
+                }
+            ?>
+            <h2><?php echo $title; ?></h2>
+            <ol id="citations">
+
+            <?php foreach($collection as $id => $citation): ?>
+                <?php
+                    $redirectUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+                    $remUrl = $this->url('citation/remove', array('id' => $id));
+                    $remUrl .= '?redirect=' . $redirectUrl;
+                ?>
+                <li>
+                    <?php echo $citation; ?>
+                    <a href="<?php echo $remUrl; ?>" data-id="<?php echo $id; ?>">x</a>
+                </li>
+            <?php endforeach; ?>
+            </ol>
+        </div>

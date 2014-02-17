@@ -1,0 +1,61 @@
+$color: #333;
+$backgroundColor: #fff;
+$linkColor: #faa900;
+
+$fontStack: "Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+
+
+@mixin fontSmooth {
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body{
+  width: 100%;
+  min-width: 1024px;
+  height: 100%;
+  font-family:$fontStack;
+  color:$color;
+  margin:0 0 1px;
+  line-height: 1.5;
+  background-color:$backgroundColor;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+  text-rendering: optimizeLegibility;
+}
+
+body,
+input,
+button {
+  @include fontSmooth;
+}
+
+a:link, a:visited {
+  color:$linkColor;
+  text-decoration:none;
+}
+
+a:hover, a:active {
+  border-bottom:1px dotted $linkColor;
+}
+
+h1 {
+  line-height: 1.2;
+}
+
+h2 {
+  font-weight: normal;
+  line-height: 1.2;
+  margin-top:0.25em;
+  margin-bottom: 0.5em;
+}
+
+h3 {
+  line-height: 1.2;
+}
+
+h4 {
+  line-height: 1.2;
+}

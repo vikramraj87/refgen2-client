@@ -1,0 +1,8 @@
+        <h2>Save collection as</h2>
+        <div>
+        <?php if(!isset($this->form)): ?>
+            <p>Collection successfully saved.</p>
+        <?php else: ?>
+            <?php echo $this->partial('citation/forms/create-collection.phtml'); ?>
+        <?php endif; ?>
+        </div>
