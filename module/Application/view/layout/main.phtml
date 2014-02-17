@@ -1,15 +1,22 @@
 <?php echo $this->partial('layout/_head.phtml'); ?>
-    <!-- Add your site or application content here -->
 <div id="container">
     <header id="page-header" class="clearfix">
-        <h1>k<span>i</span>v<span>!</span></h1>
-        <h2>Reference generator</h2>
+        <nav>
+            <?php echo $this->navigation('Navigation')->menu(); ?>
+        </nav>
+
+        <div id="logo">
+            <h1>K<sub>V</sub></h1>
+            <h2><a href="/">Reference generator</a></h2>
+        </div>
+
+        <div id="search-mini">
+            <?php echo $this->partial('forms/search-form.phtml', array(
+                'query' => $this->query,
+                'action' => $this->url('search')
+            )); ?>
+        </div> <!-- #search -->
     </header>
-    <div id="search">
-        <?php echo $this->partial('forms/search-form.phtml', array(
-            'query' => $this->query,
-            'action' => $this->url('search')
-        )); ?>
-    </div> <!-- #search -->
-    <?php echo $this->content; ?>
+<?php echo $this->content; ?>
+
 <?php echo $this->partial('layout/_foot.phtml');

@@ -1,4 +1,5 @@
 <?php
+use Citation\Service\CitationService;
 return array(
     'router' => array(
         'routes' => array(
@@ -41,13 +42,28 @@ return array(
                     'get' => array(
                         'type' => 'segment',
                         'options' => array(
-                            'route' => '/get[/:id]',
+                            'route' => '/get[/:id[/:page]]',
+                            'constraints' => array(
+                                'id' => '\d+',
+                                'page' => '\d+'
+                            ),
+                            'defaults' => array(
+                                'id' => '0',
+                                'page' => '1',
+                                'action' => 'get'
+                            )
+                        )
+                    ),
+                    'open' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/open[/:id]',
                             'constraints' => array(
                                 'id' => '\d+'
                             ),
                             'defaults' => array(
                                 'id' => '0',
-                                'action' => 'get'
+                                'action' => 'open'
                             )
                         )
                     ),
@@ -65,8 +81,12 @@ return array(
         )
     ),
     'service_manager' => array(
-        'invokables' => array(
-            'citation_service' => 'Citation\Service\CitationService'
+        'factories' => array(
+            'Citation/Service' => function($sm) {
+                $service = new CitationService();
+                $service->setServiceLocator($sm);
+                return $service;
+            }
         )
     ),
     'controllers' => array(
@@ -82,8 +102,8 @@ return array(
     'view_helpers' => array(
         'factories' => array(
             'citations' => function ($sm) {
-                $service = new \Citation\Service\CitationService();
-                $service->setServiceLocator($sm);
+                /** @var \Citation\Service\CitationService $service */
+                $service = $sm->getServiceLocator()->get('CitationService');
                 return new \Citation\View\Helper\Citations($service);
             }
         )

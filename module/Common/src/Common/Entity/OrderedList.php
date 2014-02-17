@@ -31,10 +31,16 @@ class OrderedList  implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Returns the data in the order stored in the array order
+     *
      * @return array
      */
     public function getData()
     {
+        $data = array();
+        foreach($this->order as $order => $id) {
+            $data[$id] = $this->data[$id];
+        }
         return $this->data;
     }
 

@@ -14,7 +14,7 @@ class Collection extends OrderedList
     protected $userId;
 
     /** @var string */
-    protected $name;
+    protected $name = '';
 
     /** @var DateTime */
     protected $createdAt = null;
@@ -23,28 +23,38 @@ class Collection extends OrderedList
     protected $updatedAt = null;
 
     /**
-     * Constructor
-     *
      * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @param string $userId
      */
-    public function __construct($id, $userId)
+    public function setUserId($userId)
     {
-        $this->id     = $id;
         $this->userId = $userId;
     }
 
     /**
      * @param \Article\Entity\Article[] $articles
+     * @throws \InvalidArgumentException
      */
     public function setArticles(array $articles)
     {
         if(!empty($articles)) {
             $tmp = array();
             foreach($articles as $article) {
+                if(!$article instanceof Article) {
+                    throw new \InvalidArgumentException('articles should be array of type Article\Entity\Article');
+                }
                 $tmp[$article->getId()] = $article;
             }
             $this->setData($tmp);
+        } else {
+            $this->setData(array());
         }
     }
 
@@ -126,4 +136,16 @@ class Collection extends OrderedList
         return $this->userId;
     }
 
-} 
+    /**
+     * @param string $offset
+     * @param Article $value
+     * @throws \InvalidArgumentException
+     */
+    public function offsetSet($offset, $value)
+    {
+        if(!$value instanceof Article) {
+            throw new \InvalidArgumentException('value must be of type Article\Entity\Article');
+        }
+        parent::offsetSet($offset, $value);
+    }
+}

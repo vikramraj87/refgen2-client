@@ -16,6 +16,8 @@ use Zend\Session\SaveHandler\DbTableGatewayOptions;
 use Zend\Session\SaveHandler\DbTableGateway;
 use Zend\Session\SessionManager;
 use Zend\Session\Container;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream;
 
 class Module
 {
@@ -72,8 +74,7 @@ class Module
                 'translator' => 'MvcTranslator',
             ),
             'invokables' => array(
-                'citation_generator' => 'Article\Entity\Citation\Vancouver',
-                'article_hydrator'   => 'Zend\Stdlib\Hydrator\ClassMethods'
+                'citation_generator' => 'Article\Entity\Citation\Vancouver'
             ),
             'factories' => array(
                 'app_di' => function($sm) {
@@ -98,9 +99,11 @@ class Module
                     $di->configure($config);
                     return $di;
                 },
-                'zero_results_log' => function($sm) {
-                    $log = new \Zend\Log\Logger();
-                    $writer = new \Zend\Log\Writer\Stream('data/logs/zeroresults.log');
+                'ZeroResultsLogger' => function($sm) {
+                    $log    = new Logger();
+                    $date = new DateTime('NOW');
+                    $fn = $date->format('Y-m-d') . '.log';
+                    $writer = new Stream('data/logs/zero-results/' . $fn, 'a+');
                     $log->addWriter($writer);
                     return $log;
                 },

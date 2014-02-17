@@ -2,35 +2,32 @@
 namespace Citation\Form;
 
 use Zend\Form\Form;
-use Zend\Form\Element;
 
-class CreateForm extends Form
+class OpenForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('create-collection');
+        parent::__construct('open-collection');
         $this->setAttribute('method', 'post');
-        $this->setAttribute('id', 'create-collection');
-
+        $this->setAttribute('id', 'open-collection');
 
         $this->add(array(
-            'name' => 'name',
-            'type' => 'Zend\Form\Element\Text',
+            'name' => 'id',
+            'type' => 'Zend\Form\Element\Select',
             'options' => array(
-                'label' => 'Create a new collection with the selected articles'
+                'label' => 'Open an already existing collection'
             ),
             'attributes' => array(
-                'placeholder' => 'Collection Name',
-                'id' => 'name'
+                'id' => 'collection-id',
             )
         ));
 
         $this->add(array(
-            'name' => 'action-save',
+            'name' => 'action-open',
             'type' => 'Zend\Form\Element\Submit',
             'attributes' => array(
-                'id' => 'action-save',
-                'value' => 'Save'
+                'id' => 'action-open',
+                'value' => 'Open'
             )
         ));
 
@@ -43,4 +40,4 @@ class CreateForm extends Form
             )
         ));
     }
-}
+} 

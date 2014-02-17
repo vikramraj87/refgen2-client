@@ -2,13 +2,13 @@
 namespace Application\Controller;
 
 use Article\Entity\Article;
-use Zend\Mvc\Controller\AbstractActionController;
-use Api\Client\ApiClient;
-use Zend\View\Model\ViewModel;
-use Api\Exception\ApiException;
 use Application\Entity\ArticlesAdapter;
-use Zend\Paginator\Paginator;
 use Api\Service\ApiService;
+
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Paginator\Paginator;
+use Zend\Stdlib\Hydrator\ClassMethods;
 
 class SearchController extends AbstractActionController
 {
@@ -18,8 +18,8 @@ class SearchController extends AbstractActionController
     public function indexAction()
     {
         /** @var string $term search term as part of url or query string */
-        $term = $this->params()->fromRoute('term', '');
-        $term = $term ?: $this->params()->fromQuery('term', '');
+        $term = $this->params()->fromRoute('term', '') ?:
+                $this->params()->fromQuery('term', '');
 
         // filter search term
         $term = trim(strip_tags($term));
@@ -30,8 +30,9 @@ class SearchController extends AbstractActionController
             $this->redirect()->toRoute('home');
         }
 
-        $page = $this->params()->fromRoute('page', '');
-        $page = $page ?: $this->params()->fromQuery('page');
+        // get the page number from route or query
+        $page = $this->params()->fromRoute('page', '') ?:
+                $this->params()->fromQuery('page');
 
         $result = null;
 
@@ -42,31 +43,27 @@ class SearchController extends AbstractActionController
         }
 
         $this->layout()->setVariable('query', $term);
-
-        $count = $result['count'];
-
         $viewModel = new ViewModel();
 
+        $count = $result['count'];
         if($count === 0) {
             /** @var \Zend\Log\Logger $logger */
-            $logger = $this->getServiceLocator()->get('zero_results_log');
-
+            $logger = $this->getServiceLocator()->get('ZeroResultsLogger');
             $logger->debug(sprintf('Searched with %s', $term));
-
             $viewModel->setTemplate('application/search/no-results');
             return $viewModel;
         }
 
         /** @var \Zend\Stdlib\Hydrator\ClassMethods $hydrator */
-        $hydrator = $this->getServiceLocator()->get('article_hydrator');
+        $hydrator = new ClassMethods();
 
         /** @var \Zend\Di\Di $di */
         $di = $this->getServiceLocator()->get('app_di');
 
         if($count === 1) {
-            /** @var array|Article $article */
+            /** @var Article $article */
             $article = $result['results'][0];
-            $article = $hydrator->hydrate($article, $di->get('Article\Entity\Article'));
+            $article = $hydrator->hydrate($article, $di->newInstance('Article\Entity\Article'));
             $viewModel->setTemplate('application/search/single-result');
             $viewModel->article = $article;
 

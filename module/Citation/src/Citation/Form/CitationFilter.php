@@ -10,7 +10,7 @@ class CitationFilter extends InputFilter
     public function __construct()
     {
         $this->add(array(
-            'name' => 'collection-name',
+            'name' => 'name',
             'required' => true,
             'filters' => array(
                 array('name' => 'StripTags'),

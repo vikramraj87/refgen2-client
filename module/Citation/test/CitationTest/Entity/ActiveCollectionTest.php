@@ -1,19 +1,22 @@
 <?php
 namespace CitationTest\Entity;
 
+use Citation\Entity\ActiveCollection;
 use PHPUnit_Framework_TestCase;
-use Zend\Json\Json;
 use Citation\Entity\Collection;
+use Zend\Json\Json;
 use Article\Entity\Citation\Vancouver;
-use Article\Entity\Article;
 use Zend\Stdlib\Hydrator\ClassMethods;
+use Article\Entity\Article;
 
-
-class CollectionTest extends PHPUnit_Framework_TestCase
+class ActiveCollectionTest extends PHPUnit_Framework_TestCase
 {
     /** @var Article[] */
     protected $articles;
+
+    /** @var Collection */
     protected $collection;
+
 
     public function setUp()
     {
@@ -28,79 +31,39 @@ class CollectionTest extends PHPUnit_Framework_TestCase
             $this->articles[] = $a;
         }
         $this->collection = new Collection();
+        $this->collection->setId(7);
+        $this->collection->setUserId(3);
         $this->collection->setArticles($this->articles);
         $this->collection->setName('Thesis');
+        $this->collection->setCreatedAt('2014-01-27 21:32:13');
+        $this->collection->setUpdatedAt(null);
     }
 
-    public function testInitialization()
+    public function testInitWithCollection()
     {
-        $collection = new Collection();
+        $activeCollection = new ActiveCollection($this->collection);
+        $this->assertEquals(7, $activeCollection->getId());
+        $this->assertEquals(3, $activeCollection->getUserId());
+        $this->assertEquals('Thesis', $activeCollection->getName());
+        $this->assertEquals(new \DateTime('2014-01-27 21:32:13'), $activeCollection->getCreatedAt());
+        $this->assertEquals(null, $activeCollection->getUpdatedAt());
 
-        $collection->setArticles($this->articles);
-        $collection->setName('Thesis');
-        $this->assertEquals('Thesis', $collection->getName());
         $i = 0;
-        foreach($collection as $id => $article) {
+        foreach($activeCollection as $id => $citation) {
+            $this->assertEquals($this->articles[$i]->getCitation(), $citation);
             $this->assertEquals($this->articles[$i]->getId(), $id);
-            $this->assertEquals($this->articles[$i]->getAbstract(), $article->getAbstract());
-            $this->assertEquals($this->articles[$i]->getAuthors(), $article->getAuthors());
             $i++;
         }
     }
 
-    public function testInitWithHydrator()
+    public function testGettingIds()
     {
-        $h = new ClassMethods();
-        $data['id'] = 7;
-        $data['user_id'] = 2;
-        $data['name'] = 'kirthika Thesis';
-        $data['articles'] = $this->articles;
-        $data['created_at'] = '2014-01-27 21:32:13';
-        $data['updated_at'] = null;
-
-        /** @var Collection $collection */
-        $collection = new Collection();
-
-        $collection = $h->hydrate($data, $collection);
-
-        $this->assertEquals(7, $collection->getId());
-        $this->assertEquals(2, $collection->getUserId());
-        $this->assertEquals('kirthika Thesis', $collection->getName());
-        $this->assertEquals((new \DateTime('2014-01-27 21:32:13'))->getTimestamp(),
-                            $collection->getCreatedAt()->getTimestamp());
-        $this->assertEquals(null, $collection->getUpdatedAt());
-        $i = 0;
-        foreach($collection as $id => $article) {
-            $this->assertEquals($this->articles[$i]->getId(), $id);
-            $this->assertEquals($this->articles[$i]->getAbstract(), $article->getAbstract());
-            $this->assertEquals($this->articles[$i]->getAuthors(), $article->getAuthors());
-            $i++;
+        $activeCollection = new ActiveCollection($this->collection);
+        $expectedIds = array();
+        foreach($this->articles as $article) {
+            $expectedIds[] = $article->getId();
         }
-    }
-
-    public function testArrayAccess()
-    {
-        $collection = $this->collection;
-        unset($collection['24412268']);
-        $this->assertEquals(null, $collection['24412268']);
-
-        $i = 1;
-        foreach($collection as $id => $article) {
-            $this->assertEquals($this->articles[$i]->getId(), $id);
-            $this->assertEquals($this->articles[$i]->getAbstract(), $article->getAbstract());
-            $this->assertEquals($this->articles[$i]->getAuthors(), $article->getAuthors());
-            $i++;
-        }
-
-        $collection['24412268'] = $this->articles[0];
-        $this->articles[] = $this->articles[0];
-
-        $i = 1;
-        foreach($collection as $id => $article) {
-            $this->assertEquals($this->articles[$i]->getId(), $id);
-            $this->assertEquals($this->articles[$i]->getAbstract(), $article->getAbstract());
-            $this->assertEquals($this->articles[$i]->getAuthors(), $article->getAuthors());
-            $i++;
-        }
+        $ids = array_keys($activeCollection->getCitations());
+        $this->assertEquals(implode(',', $expectedIds), implode(',', $ids));
     }
 }

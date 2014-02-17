@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+        nav {
+
+        }
+
+        nav a  {
+            text-decoration: none;
+            color:#faa900;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        nav > ul {
+            float: right;
+        }
+
+        nav > ul > li {
+            float: left;
+            margin-left:20px;
+            position:relative;
+        }
+
+        nav > ul > li > a {
+            display: inline-block;
+            padding: 5px 10px;
+            z-index: 0;
+        }
+
+
+        nav ul ul {
+            position: absolute;
+            display: none;
+            padding:5px 10px;
+            border: 1px solid #aaa;
+            box-shadow: 0 1px 5px 2px #ccc; /* left top feather spread */
+            border-radius: 10px;
+            z-index: 10;
+            width:100px;
+            left: -25px;
+        }
+
+        nav > ul > li:hover > ul {
+            display:block;
+        }
+        nav ul ul:before, nav ul ul:after {
+            position:absolute;
+            content: " ";
+            bottom:100%;
+            left:50%;
+            width:0;
+            height:0;
+        }
+        nav ul ul:before {
+            border: 10px solid;
+            border-color: transparent transparent #aaa transparent;
+            margin-left:-10px;
+        }
+        nav ul ul:after {
+            border: 9px solid;
+            border-color: transparent transparent #fff transparent;
+            margin-left:-9px;
+        }
+
+        nav ul ul li {
+            padding: 2px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        nav ul ul li:last-child {
+            border-bottom: none;
+        }
+
+        nav ul ul a {
+            color:#999;
+            display: inline-block;
+            padding:5px 10px;
+            margin:5px 0;
+            border-radius: 5px;
+            width:80px;
+        }
+
+        nav ul ul a:hover {
+            color:#faa900;
+        }
+
+
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Citations</a>
+                <ul>
+                    <li><a href="#">New list</a></li>
+                    <li><a href="#">Open list</a></li>
+                    <li><a href="#">Save list</a></li>
+                    <li><a href="#">Save list as</a></li>
+                    <li><a href="#">Delete list</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Log out</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

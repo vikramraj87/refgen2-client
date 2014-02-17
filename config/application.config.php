@@ -6,7 +6,8 @@ return array(
         'Api',
         'Article',
         'Common',
-        'Citation'
+        'Citation',
+        'Navigation'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

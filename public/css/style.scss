@@ -1,0 +1,568 @@
+@import "normalize";
+@import "boilerOption";
+@import "global";
+
+
+@mixin gradientBlack {
+  background: #3c3c3c; /* Old browsers */
+  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzNjM2MzYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMjIyMjIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top, #3c3c3c 0%, #222222 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3c3c3c), color-stop(100%,#222222)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #3c3c3c 0%,#222222 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #3c3c3c 0%,#222222 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #3c3c3c 0%,#222222 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #3c3c3c 0%,#222222 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3c3c3c', endColorstr='#222222',GradientType=0 ); /* IE6-8 */
+}
+
+@mixin borderRadius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  -o-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin borderBox {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+       -o-box-sizing: border-box;
+          box-sizing: border-box;
+
+}
+
+#container {
+  min-height: 100%;
+  position: relative;
+}
+/* ==========================================================================
+                              Header
+   ========================================================================== */
+#page-header {
+  @include gradientBlack;
+  border-bottom: 1px solid #fff;
+  padding:0.6em 0.625em;
+  font-size:16px;
+
+  ul {
+    margin: 0;
+  }
+
+  h1 {
+    float:left;
+    margin:0 0 0 1.5em;
+    color:#faa900;
+    font-size: 1.6em;
+    padding: 0;
+  }
+
+  h2 {
+    font-size: 1.2em;
+    margin-left: 0.5em;
+    float: left;
+    a {
+      color: #999;
+      &:hover {
+        color:#fff;
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+                  Single [Layout for pages with only form]
+   ========================================================================== */
+
+#single {
+  width:30em;
+  background-color: #fff;
+  margin:5em auto;
+  @include borderRadius(8px);
+  box-shadow: 0 0 5px 1px #ccc;
+  h2 {
+    background-color: #eee;
+    -webkit-border-radius: 8px 8px 0 0;
+       -moz-border-radius: 8px 8px 0 0;
+        -ms-border-radius: 8px 8px 0 0;
+         -o-border-radius: 8px 8px 0 0;
+            border-radius: 8px 8px 0 0;
+    padding: 0.5em 1em;
+  }
+  div {
+    padding: 0em 2em 1em 2em;
+  }
+}
+
+select {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+
+input[type=text] {
+  border:1px solid #999;
+  outline:none;
+  margin:0;
+  padding:0.5em 0.5em;
+  @include borderRadius(0.3em);
+}
+
+input[type=submit] {
+  color: #fff;
+  background-color: #777;
+  background: -webkit-linear-gradient(top, #777 0%, #666 100%);
+  background: linear-gradient(to bottom, #777 0%, #666 100%);
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #555;
+  border-right: 1px solid #676767;
+  border-left: 1px solid #676767;
+  padding: 0.3em 0.5em;
+  font-weight: bold;
+  text-transform: uppercase;
+  @include borderRadius(0.5em);
+  -webkit-box-shadow: inset 0 1px 0 0 #aaa, 0 1px 2px 0 #ddd;
+  text-shadow: 0 -1px 1px #444;
+  outline:none;
+  &:hover {
+    color:#eee;
+    background-color: #555;
+    background: -webkit-linear-gradient(top, #555 0%, #444 100%);
+    background: linear-gradient(to bottom, #555 0%, #444 100%);
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #333;
+    border-right: 1px solid #474747;
+    border-left: 1px solid #474747;
+    -webkit-box-shadow: inset 0 1px 0 0 #888, 0 1px 2px 0 #bbb;
+    text-shadow: 0 -1px 1px #222;
+  }
+  &:active {
+    background-color: #444;
+    border:1px solid #333;
+    border-bottom: #222;
+    -webkit-box-shadow: inset 0 0 6px 3px #222, 0 1px 0 0 #fff;
+    text-shadow: 0 -1px 1px #111;
+  }
+  /*
+
+
+  @include borderRadius(1em);
+  &:hover {
+    background-color: #666;
+  }*/
+}
+/* ==========================================================================
+                              Navigation
+   ========================================================================== */
+
+nav {
+  margin:0 1.5em 0 0;
+  padding:0;
+  float:right;
+
+  a:link, a:visited {
+    color:#ddd;
+  }
+  a:hover, a:active {
+    border-bottom: none;
+    color:#faa900;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    ul {
+      position: absolute;
+      //display: none;
+      padding: 0.3125em 0.625em;
+      box-shadow: 0 1px 5px 1px #ccc; /* left top blur spread */
+      @include borderRadius(0.625em);
+      -webkit-transform: translateY(-10px);
+         -moz-transform: translateY(-10px);
+          -ms-transform: translateY(-10px);
+           -o-transform: translateY(-10px);
+              transform: translateY(-10px);
+      -webkit-transition: all .25s ease-out;
+         -moz-transition: all .25s ease-out;
+          -ms-transition: all .25s ease-out;
+           -o-transition: all .25s ease-out;
+              transition: all .25s ease-out;
+      opacity:0;
+      pointer-events: none;
+      left: -1.8125em;
+      background-color: #fff;
+      z-index: 10;
+
+      li {
+        padding: 0.125em 0;
+        border-bottom: 1px solid #ddd;
+      }
+
+      li:last-child {
+        border-bottom: none;
+      }
+
+      a:link, a:visited {
+        color:#666;
+        display: inline-block;
+        padding:0.1875em 0.625em;
+        margin:0.3125em 0;
+        width:6em;
+      }
+
+      a:hover, a:active  {
+        color:#faa900;
+      }
+    }
+
+  }
+}
+
+html.lt-ie8 nav ul ul{
+  display: none;
+}
+
+html.lt-ie8 nav > ul > li:hover ul {
+  display: block;
+}
+
+nav > ul > li {
+  float: left;
+  position:relative;
+}
+
+nav > ul > li > a {
+  display: inline-block;
+  padding: 0.25em 0.625em;
+}
+
+nav > ul > li:hover  ul {
+  display:block;
+  pointer-events:auto;
+  opacity:1;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+
+}
+
+nav ul ul:before {
+  position:absolute;
+  content: " ";
+  bottom:100%;
+  left:50%;
+  width:0;
+  height:0;
+}
+
+nav ul ul:before {
+  border: 10px solid;
+  border-color: transparent transparent #fff transparent;
+  margin-left:-10px;
+}
+
+
+nav ul ul li:last-child {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+                              Search Form
+   ========================================================================== */
+
+#search-mini {
+  float:left;
+  margin-left:2.5em;
+  /*float:right;
+  margin-top:0.4em; */
+}
+
+div#div-search {
+  border-radius:0.625em;
+  background:#fff;
+  padding:0 0.125em 0 0.5em;
+  margin:0 auto;
+  width:23em;
+}
+
+input#img-search {
+  width:1.75em;
+  height:1.75em;
+  float:right;
+  outline:none;
+  margin:0.25em 0.25em 0.25em 0;
+}
+
+input#txt-search {
+  width:21em;
+  border:none;
+  outline:none;
+  margin:0;
+  padding:0.25em 0;
+  height:1.75em;
+
+}
+
+/* ==========================================================================
+                              MAIN DIV
+   ========================================================================== */
+$width:1024px;
+
+div#main {
+  width:100%;
+  min-width:$width;
+  font-size: 16px;
+  margin:0px auto;
+  padding-bottom: 3em;
+
+  .row {
+    margin:2em 0;
+
+
+    .col {
+      padding:1em 1.5em;
+      width:43%;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+
+      h2 {
+        font-size: 2em;
+      }
+    }
+  }
+
+  #vancouver {
+    width:100%;
+    h2, p {
+      text-align: center;
+    }
+
+    p {
+      width: 50%;
+      margin:0 auto;
+    }
+
+  }
+
+  #search-id, #create-list  {
+    margin-left:5%;
+    float: left;
+  }
+
+  #search-term, #manage-lists {
+    margin-right:5%;
+    float: right;
+  }
+
+  #search-term, #manage-lists {
+    margin-left:2em;
+
+  }
+}
+
+/* ==========================================================================
+                              Two col
+   ========================================================================== */
+#body {
+  padding-bottom:4em;
+  margin-top:1em;
+}
+
+#content, #side {
+  padding:0em 2em;
+}
+
+#content {
+  margin-right: 25em;
+
+}
+
+#side {
+  width: 25em;
+  float:right;
+  border-left: 1px dotted #666;
+  @include borderBox;
+}
+
+#content {
+  height:100%;
+  article {
+    //background-color: #eee;
+    padding:1em 0 1em 0;
+    border-top: 1px dotted #666;
+    &:first-child {
+      padding-top:0;
+      border-top: none;
+    }
+  }
+}
+
+article {
+  header {
+    h2 {
+      margin-bottom: 0;
+    }
+    h3 {
+      margin-top:0;
+      font-size: 1em;
+      font-weight: normal;
+      line-height: 1.5;
+      color:#666;
+    }
+  }
+}
+
+p.citation {
+  background-color: #efefef;
+  margin-top:0;
+  padding:0.5em 1em;
+  @include borderRadius(0.5em);
+  overflow: hidden; /* to remove the excess selection beyond the border */
+}
+p.read-more, p.add-to-list {
+  margin:0;
+  padding:0;
+}
+p.read-more {
+  float:right;
+  &:after {
+    content: " \27F6";
+    color:#fbb900;
+  }
+}
+p.add-to-list {
+
+  &:after {
+    content: " [+]";
+    color:#fbb900;
+  }
+}
+
+/* ==========================================================================
+                          Pagination section
+   ========================================================================== */
+
+ol#pagination {
+  text-align:center;
+  list-style-type:none;
+
+  li {
+    display: inline-block;
+
+    span {
+      display:inline-block;
+      width:1.5em;
+      height:1.5em;
+      margin:0 0.25em;
+      line-height: 1.5;
+      font-size:1em;
+      border-radius:999px;
+      color:#fff;
+      text-align:center;
+      background-color: #999;
+    }
+
+    a {
+      @extend span;
+
+      &:link, &:visited {
+        background-color: #fbb900;
+      }
+
+      &:hover, &:active {
+        border-bottom:none;
+        background-color:#999;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+                              Sidebar
+   ========================================================================== */
+#side {
+  ul, ol {
+    margin:0;
+    padding:0;
+    list-style: none;
+  }
+
+  li {
+    padding:1.3em 0.5em 0.25em 1em;
+    font-size: 0.8em;
+    background-color: #eee;
+    list-style: none;
+    margin-bottom: 0.25em;
+    position:relative;
+    @include borderRadius(0.5em);
+
+    a {
+      position:absolute;
+      top:0em;
+      right:0em;
+      padding: 0.1em 0.3em;
+      display: inline-block;
+      font-weight: bold;
+      -webkit-border-radius: 0 0.5em 0 0.5em;
+         -moz-border-radius: 0 0.5em 0 0.5em;
+          -ms-border-radius: 0 0.5em 0 0.5em;
+           -o-border-radius: 0 0.5em 0 0.5em;
+              border-radius: 0 0.5em 0 0.5em;
+
+      &:hover {
+        background-color: #fbb900;
+        color: #eee;
+      }
+    }
+  }
+}
+
+
+/* ==========================================================================
+                              Footer
+   ========================================================================== */
+
+footer#page-footer {
+  font-size: 16px;
+  @include gradientBlack;
+  color: #fff;
+
+  width: 100%;
+  height: 3em;
+
+  position: absolute;
+  bottom:0;
+  left:0;
+
+  div {
+    text-align: center;
+    span {
+      color: #faa900;
+      line-height: 3;
+    }
+  }
+}
+
+/*
+@media screen and (max-width: 42em) {
+  body {
+    min-width:42em;
+    width:42em;
+  }
+  #container {
+    width: 42em;
+  }
+  #content, #side {
+    float:none;
+  }
+  #side {
+    display:none;
+  }
+  #content {
+    margin-right:0;
+  }
+}
+*/
+@import "helper";

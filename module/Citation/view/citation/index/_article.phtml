@@ -3,6 +3,9 @@
         <?php $id = $article->getId(); ?>
         <article>
             <header>
+                <?php if($this->title != null): ?>
+                <h2>Collection - <?php echo $this->title; ?></h2>
+                <?php endif; ?>
                 <h2><?php echo $article->getTitle(); ?></h2>
                 <?php $authors = $article->getAuthors(); ?>
                 <?php if(empty($authors)): ?>
@@ -13,7 +16,7 @@
             </header>
             <?php $abstract = $article->getAbstract(); ?>
             <?php if(count($abstract)): ?>
-                <div class="abstract">
+                <div class="abstract clearfix">
                     <h3>Abstract</h3>
                 <?php $abstract_content = implode(" ", $abstract); ?>
                 <?php $abstract_truncated = $this->truncate($abstract_content); ?>
@@ -21,28 +24,13 @@
                     $viewMore = true;
                 } ?>
                     <p><?php echo $abstract_truncated; ?></p>
+                <?php if($viewMore): ?>
+                    <p class="read-more"><a href="<?php echo $this->url('search', array('term' => $id)); ?>">read more</a></p>
+                <?php endif; ?>
                 </div>
             <?php endif; ?>
-            <div id="article-actions">
-                <?php if($viewMore): ?>
-                    <p class="read-more"><a href="<?php echo $this->url('search', array('term' => $id)); ?>">Read more</a></p>
-                <?php endif; ?>
-                <?php if(!$this->citations()->isAdded($article)): ?>
-                <p class="add-to-list">
-                        <?php $redirectUrl = $this->url('search', array('term' => $this->term)); ?>
-                        <?php $addUrl = $this->url('citation/add', array('id' => $id)); ?>
-                        <?php $addUrl .= '?redirect=' . $redirectUrl; ?>
-                    <a href="<?php echo $addUrl; ?>">Add to list</a>
-                </p>
-                <?php endif; ?>
-            </div>
             <footer>
-
-                <p class="pmid"><b>PMID:</b> <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
-                <p class="citation"><b>Cite by:</b> <?php echo $article->getCitation(); ?></p>
-
-
-
-
+                <p class="pmid">PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
+                <p>Cite by: <span class="citation"><?php echo $article->getCitation(); ?></span></p>
             </footer>
         </article>

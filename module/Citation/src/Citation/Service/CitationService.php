@@ -2,16 +2,18 @@
 namespace Citation\Service;
 
 use Zend\Session\Container;
-use Common\Entity\OrderedList;
-use Api\Client\ApiClient;
 use Zend\Stdlib\Hydrator\ClassMethods;
-
-use Citation\Entity\Collection;
-
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
+use Api\Service\ApiService;
 
+use Citation\Entity\Collection;
+use Citation\Entity\ActiveCollection;
+
+use Article\Entity\Article;
+
+//todo: remove invalid server response exception
 class CitationService implements ServiceLocatorAwareInterface
 {
     /** @var Container */
@@ -19,6 +21,9 @@ class CitationService implements ServiceLocatorAwareInterface
 
     /** @var ServiceLocatorInterface */
     protected $services;
+
+    /** @var ApiService */
+    protected $apiService = null;
 
     /**
      * Set service locator
@@ -40,15 +45,25 @@ class CitationService implements ServiceLocatorAwareInterface
         return $this->services;
     }
 
-
+    /**
+     * Adds an article to the active collection
+     *
+     * @param $id
+     * @return bool
+     * @throws \RuntimeException
+     */
     public function add($id)
     {
-        /** @var \Common\Entity\OrderedList $list */
-        $list = $this->getContainer()->tmp;
+        /** @var Collection $collection */
+        $collection = $this->getActiveCollection();
 
-        if(!isset($list[$id])) {
+        if(!isset($collection[$id])) {
             /** @var array $result */
-            $result = ApiClient::getArticle($id);
+            $result = $this->getApiService()->getArticle($id);
+
+            if(!isset($result['count'])) {
+                throw new \RuntimeException('Invalid data returned from the server');
+            }
 
             /** @var \Article\Entity\Article|null $article */
             $article = null;
@@ -64,150 +79,265 @@ class CitationService implements ServiceLocatorAwareInterface
                     $result['results'][0], $di->newInstance('Article\Entity\Article')
                 );
             }
+
             if($article !== null) {
-                $list[$article->getId()] = $article->getCitation();
-                $this->getContainer()->changed = true;
+                $collection[$article->getId()] = $article;
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Removes an article from the active collection
+     *
+     * @param $id
+     * @return bool
+     */
     public function remove($id)
     {
-        /** @var \Common\Entity\OrderedList $list */
-        $list = $this->getContainer()->tmp;
+        /** @var Collection $collection */
+        $collection = $this->getActiveCollection();
 
-        if(isset($list[$id])) {
-            unset($list[$id]);
-            $this->getContainer()->changed = true;
+        if(isset($collection[$id])) {
+            unset($collection[$id]);
             return true;
         }
         return false;
     }
 
-    public function update()
+    /**
+     * Clears the existing collection and create a new blank collection
+     */
+    public function newCollection()
     {
-        $activeListId = $this->getContainer()->activeListId;
-        if($activeListId === 0) {
-            throw new \RuntimeException('No active list selected for updating');
-        }
-        // update the list
-
-        $this->getContainer()->changed = false;
-        return true;
-    }
-
-    public function save()
-    {
-        $activeListId = $this->getContainer()->activeListId;
-        if($activeListId === 0) {
-            throw new \RuntimeException('No active list selected for saving');
-        }
-        // save the active list
-
-        $this->getContainer()->changed = false;
-        return true;
-    }
-
-    public function isChanged()
-    {
-        return $this->getContainer()->changed;
+        $this->getContainer()->activeCollection = new ActiveCollection();
     }
 
     /**
-     * @param string $collectionId
+     * Opens the collection and set it as active collection
+     *
+     * @param $id
+     * @return bool
+     */
+    public function openCollection($id)
+    {
+        $collection = $this->getCollection($id);
+        $this->setActiveCollection($collection);
+        return true;
+    }
+
+    /**
+     * Gets the collection data from the API
+     *
+     * @param $id
      * @return Collection
      * @throws \RuntimeException
      */
-    public function getCollection ($collectionId)
+    public function getCollection($id)
     {
-        $userId = 1; // should come from the session
-        $collectionData = ApiClient::getCollection($collectionId, $userId);
+        $id = (int) $id;
+        $userId = 1; // should come from session
+
+        $collectionData = $this->getApiService()->getCollection($id, $userId);
 
         if(!isset($collectionData['id'])) {
-            throw new \RuntimeException('No data returned from the server');
+            throw new \RuntimeException('Invalid data returned from the server');
         }
 
-        /** @var Collection $collection */
-        $collection = new Collection($collectionData['id'], $collectionData['user_id']);
-
-        $collection->setName($collectionData['name']);
-        $collection->setCreatedAt($collectionData['created_at']);
-        $collection->setUpdatedAt($collectionData['updated_at']);
-
-        $articles = array();
         $hydrator = new ClassMethods();
+
+        $articlesData = $collectionData['articles'];
+        $articles = array();
+
+        /** @var \Zend\Di\Di $di */
         $di = $this->getServiceLocator()->get('app_di');
-        foreach($collectionData['articles'] as $articleData) {
+        foreach($articlesData as $articleData) {
             $articles[] = $hydrator->hydrate($articleData, $di->newInstance('Article\Entity\Article'));
         }
-        $collection->setArticles($articles);
-
-        $this->setActiveList($collection);
-
+        $collectionData['articles'] = $articles;
+        $collection = $hydrator->hydrate($collectionData, new Collection());
         return $collection;
     }
 
-    protected function checkList($listId)
+    /**
+     * Fetches all the collections of the current user from the API
+     *
+     * @return array
+     */
+    public function getCollections()
     {
         $userId = 1; // should come from the session
+        return $this->getApiService()->getCollections($userId);
     }
 
-    public function delete($listId)
+    /**
+     * Saves the current active collection if its already saved
+     *
+     * @return bool|mixed
+     */
+    public function saveCollection()
     {
-        $listId = (int) $listId;
-    }
+        $collection = $this->getActiveCollection();
+        $id     = $collection->getId();
+        $userId = 1; // should come from the session
 
-    public function rename($listId)
-    {
-        $listId = (int) $listId;
-    }
+        if($id == null) {
+            return false;
+        }
 
-    public function getActiveListId()
-    {
-        $container = $this->getContainer();
-        return array(
-            'id' => $container->activeListId,
-            'name' => $container->activeListName
+        if(!$collection->isChanged()) {
+            return true;
+        }
+
+        $ids = array();
+        if(count($collection)) {
+            $ids = array_keys($collection->getCitations());
+        }
+
+        $data = array(
+            'name'     => $collection->getName(),
+            'articles' => implode(',', $ids)
         );
+
+        $response = $this->getApiService()->updateCollection($id, $userId, $data);
+
+        if(isset($response['status']) && $response['status'] === 'success') {
+            $collection->resetChanged();
+            return true;
+        }
+        return $response;
     }
 
-    public function getAll()
+    /**
+     * Saves a new unsaved collection
+     *
+     * @param $name
+     * @return bool
+     */
+    public function saveCollectionAs($name)
     {
-        return $this->getContainer()->tmp;
+        $collection = $this->getActiveCollection();
+        $userId = 1; // should come from the session
+
+        $ids = array();
+        if(count($collection)) {
+            $ids = array_keys($collection->getCitations());
+        }
+
+        $data = array(
+            'name'     => $name,
+            'articles' => implode(',', $ids)
+        );
+
+        $response = $this->getApiService()->createCollection($userId, $data);
+
+        if(isset($response['status']) && $response['status'] === 'success') {
+            $collectionData = $response['collection'];
+
+            $collection->setId($collectionData['id']);
+            $collection->setName($collectionData['name']);
+            $collection->setCreatedAt($collectionData['created_at']);
+            $collection->resetChanged();
+            return true;
+        }
+        return isset($response['messages']) ? $response['messages'] : false;
     }
 
+    /**
+     * Deletes the active collection
+     *
+     * @return bool
+     */
+    public function deleteCollection()
+    {
+        $collection = $this->getActiveCollection();
+        $id = $collection->getId();
+        if(is_null($id)) {
+            $this->newCollection();
+            return true;
+        }
+        $userId = 1; //should come from the session
+        $response = $this->getApiService()->deleteCollection($id, $userId);
+        if(isset($response['status']) && $response['status'] == 'success') {
+            $this->newCollection();
+            return true;
+        }
+        return isset($response['messages']) ? $response['messages'] : false;
+    }
 
-    protected function setActiveList(Collection $collection)
+    /**
+     * Sets a collection as active collection
+     *
+     * @param Collection $collection
+     */
+    protected function setActiveCollection(Collection $collection)
+    {
+        $activeCollection = new ActiveCollection($collection);
+        $this->getContainer()->activeCollection = $activeCollection;
+    }
+
+    /**
+     * Getter for active collection
+     *
+     * @return ActiveCollection
+     */
+    public function getActiveCollection()
     {
         $container = $this->getContainer();
-        if($container->activeListId == $collection->getId()) {
-            return;
+        if(!isset($container->activeCollection) ||
+            !$container->activeCollection instanceof ActiveCollection)
+        {
+            $container->activeCollection = new ActiveCollection();
         }
-        $container->activeListId = $collection->getId();
-        $container->activeListName = $collection->getName();
-        $tmp = new OrderedList();
-        foreach($collection->getArticles() as $article) {
-            $tmp[$article->getId()] = $article->getCitation();
-        }
-        $container->tmp = $tmp;
-        $container->changed = false;
+        return $container->activeCollection;
     }
 
+    /**
+     * Delegate for ActiveCollection->isChanged()
+     *
+     * @return bool
+     */
+    public function isChanged()
+    {
+        return $this->getActiveCollection()->isChanged();
+    }
+
+    /**
+     * Checks whether the article is already added to the active collection
+     *
+     * @param Article $article
+     * @return bool
+     */
+    public function isAdded(Article $article)
+    {
+        $collection = $this->getActiveCollection();
+        return isset($collection[$article->getId()]);
+    }
+
+    /**
+     * Gets the session container [Factory for container]
+     *
+     * @return Container
+     */
     protected function getContainer()
     {
         if($this->container === null) {
             $this->container = new Container('citations');
-            if(!isset($this->container->tmp) ||
-               !$this->container->tmp instanceof OrderedList)
-            {
-                $this->container->tmp = new OrderedList();
-                $this->container->changed = false;
-                $this->container->activeListId = 0;
-                $this->container->activeListName = '';
-            }
         }
         return $this->container;
+    }
+
+    /**
+     * Factory for Api Service
+     * 
+     * @return ApiService
+     */
+    protected function getApiService()
+    {
+        if($this->apiService === null) {
+            $this->apiService = $this->getServiceLocator()->get('ApiService');
+        }
+        return $this->apiService;
     }
 }

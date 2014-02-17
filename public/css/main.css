@@ -109,7 +109,7 @@ textarea {
    
 /**
  * 1. Set default font family Open sans
- * 2. Set the default background color to white.
+ * 2. Set the default background color to #eee.
  */
  
 html, 
@@ -117,28 +117,146 @@ body{
 	width: 100%;
 	height: 100%;
 	font-family:"Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;  /* 1 */
-	font-size: 14px;
-	color:#444;
+	color:#333;
 	margin:0 0 1px;
-	line-height: 20px;
+    line-height: 1.5;
 	background-color:#efefef;    /* 2 */
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
-	font-smooth:always;
+
+    font-smooth:always;
 	-webkit-font-smoothing: antialiased;
 	font-smoothing: antialiased;
+}
+
+a:link, a:visited {
+    color:#fbb900;
+    text-decoration:none;
+}
+
+a:hover, a:active {
+    border-bottom:1px dotted #fbb900;
+}
+h1 {
+    line-height: 1.2;
+}
+h2 {
+   font-weight: normal;
+   line-height: 1.2;
+    margin-top:0.25em;
+    margin-bottom: 0.5em;
+}
+
+h3 {
+    line-height: 1.2;
+}
+
+h4 {
+    line-height: 1.2;
+}
+
+
+/* ==========================================================================
+                              Page Navigation
+   ========================================================================== */
+nav {
+    margin:0;
+    padding:0;
+}
+
+nav a:link, nav a:visited   {
+    text-decoration: none;
+    color:#faa900;
+}
+
+nav a:hover {
+    border-bottom: none;
+}
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+nav > ul {
+    float: right;
+}
+
+nav > ul > li {
+    float: left;
+    margin-left:20px;
+    position:relative;
+}
+
+nav > ul > li > a {
+    display: inline-block;
+    padding: 5px 10px;
+}
+
+nav ul ul {
+    position: absolute;
+    display: none;
+    padding:5px 10px;
+    box-shadow: 0 1px 5px 2px #ccc; /* left top blur spread */
+    border-radius: 10px;
+    left: -25px;
+    background-color: #fff;
+    z-index: 10;
+}
+
+nav > ul > li:hover > ul {
+    display:block;
+}
+nav ul ul:before, nav ul ul:after {
+    position:absolute;
+    content: " ";
+    bottom:100%;
+    left:50%;
+    width:0;
+    height:0;
+}
+nav ul ul:before {
+    border: 10px solid;
+    border-color: transparent transparent #fff transparent;
+    margin-left:-10px;
+}
+nav ul ul:after {
+    border: 9px solid;
+    border-color: transparent transparent #fff transparent;
+    margin-left:-9px;
+}
+
+nav ul ul li {
+    padding: 2px 0;
+    border-bottom: 1px solid #ddd;
+}
+nav ul ul li:last-child {
+    border-bottom: none;
+}
+
+nav ul ul a:link, nav ul ul a:visited {
+    color:#999;
+    display: inline-block;
+    padding:3px 10px;
+    margin:5px 0;
+    border-radius: 5px;
+    width:6em;
+}
+
+nav ul ul a:hover, nav ul ul a:active  {
+    color:#faa900;
 }
 
 /* ==========================================================================
                               Page header
    ========================================================================== */
-h1 {
-	text-align:left;
-	font-size:50px;
+#page-header {
+    margin-bottom:0.5em;
+    margin-top: 0.5em;
+}
+
+#page-header h1 {
 	margin:0;
-	padding:0;
-	line-height:0.9;
-	width:140px;
-	color:#555;
+    line-height: 1;
+    font-size:2.5em; /*48/16*/
 	font-weight:normal;
 	text-transform:lowercase;
 }
@@ -148,10 +266,10 @@ h1 span {
 }
 
 header#page-header h2 {
-	font-size:20px;
-	margin:0;
+	font-size:1.125em; /*20/16*/
+    margin:0;
 	padding:0;
-	color:#999;
+	color:#666;
 	letter-spacing:-0.05em;
 	text-transform:lowercase;
 }
@@ -159,42 +277,17 @@ header#page-header h2 {
 /* ==========================================================================
                               Column header
    ========================================================================== */
-h2 {
-	font-size:32px;
-	margin:5px 0 10px 0;
-	text-align:left;
-    font-weight: normal;
-	color:#333;
-	padding-bottom:8px;
-	line-height:32px;
-	letter-spacing:-0.075em;
-}
 
-
-
-h3{
-	font-size: 18px;
-	text-align:left;
-	background-color:transparent;
-	padding-top:12px;
-	margin-bottom:9px;
-}
 
 /* ==========================================================================
                               Main Container
    ========================================================================== */
 
 #container{
-	width: 1024px;
-	margin: 0 auto;
-	text-align: left;
+	min-width: 1024px;
+	margin: 0 20px;
 	background-color: transparent;
-	padding: 15px 0;
-}
-
-p {
-	font-size:14px;
-	line-height:1.6;
+	position:relative; /* positioning nav absolutely with top and right values */
 }
 
 /* ==========================================================================
@@ -232,14 +325,7 @@ p {
 	text-shadow:none;
 }
 
-a:link, a:visited {
-	color:#fbb900;
-	text-decoration:none;
-}
 
-a:hover, a:active {
-	border-bottom:1px dotted #fbb900;
-}
 
 
 /* ==========================================================================
@@ -251,34 +337,33 @@ a:hover, a:active {
 
 #search-result {
 	float:right;
-	margin:12px 0 0 0;
+    margin-top:0.4em;
 }
 
 div#div-search {
-	border:3px solid #aaa;
-	border-radius:10px;
+	border:0.1875em solid #aaa;
+	border-radius:0.625em;
 	background:#fff;
-	padding:0 2px 0 8px;
-	width: 640px;
+	padding:0 0.125em 0 0.5em;
+	width: 28.5em;
 	margin:0 auto;
-	box-shadow: 2px 2px 3px 1px #eee;
+	box-shadow: 0.125em 0.125em 0.1875em 0.0625em #eee;
 
 }
 input#img-search {
-    width:28px;
-    height:28px;
+    width:1.75em;
+    height:1.75em;
 	float:right;
 	outline:none;
-	margin:4px 4px 4px 0;
+	margin:0.25em 0.25em 0.25em 0;
 }
 input#txt-search {
-	width:600px;
+	width:25em;
 	border:none;
 	outline:none;
 	margin:0;
-    padding:4px 0;
-	height:28px;
-	font-size:14px;
+    padding:0.25em 0;
+	height:1.75em;
 	color:#444;
 }
 input[type=submit] {
@@ -290,32 +375,19 @@ input[type=submit] {
 /* ==========================================================================
                             Results section
    =========================================================================*/
-.twocol section {
-    float:left;
-    width:665px;
+
+.twocol #results {
+    margin-right:360px;
 }
 
 #results {
 	background:transparent;
 	padding:5px 0 0 0;
-}
 
-#results header h2 {
-	 margin-bottom:0;
-    padding-bottom:0;
-	font-size:1.6em;
-	text-transform:none;
-	line-height:25px;
-	letter-spacing:0.005em;
-}
-
-#results header h2 a:hover, .results header h2 a:active  {
-	border: none;
 }
 
 #results header h3 {
 	color:#999;
-	font-size:14px;
 	margin:0 0 5px 0;
 	padding:2px 0;
 }
@@ -328,12 +400,11 @@ article {
 	position:relative;
 	background-color:#fff;
 	margin-bottom:10px;
-	border-radius:10px;
-	text-align:justify;
+	border-radius:0.625em;
 	box-shadow:1px 1px 2px 1px #ccc;
 	border-bottom:1px solid #ccc;
 	border-right:1px solid #ccc;
-	padding:15px;
+	padding:1em;
 }
 
 article footer {
@@ -341,31 +412,30 @@ article footer {
 	color:#999;
 }
 
-span.citation {
+article header h3 {
+    color:#999;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+article span.citation {
     color:#000;
 }
 
-/* ==========================================================================
-                        Read more and Add to list section
-   ========================================================================== */
-
 p.read-more {
 	float:right;
-	margin:-1em 0 0 0;
-	font-size:13px;
-	text-transform:lowercase;
+	margin:0 0 0 0;
 }
 
+p.read-more a {
+    font-size:0.9em;
+    line-height: 1.5;
+    text-transform:lowercase;
+}
 
-p.add-to-list a:link {
-	position:absolute;
-    right:0;
-	bottom:0;
-	margin:0;
-    padding:3px 7px;
-	font-size:24px;
-	color:#fbb900;
-	
+p.read-more:after {
+    content: " \27F6";
+    color:#faa900;
 }
 
 p.add-to-list a:hover {
@@ -384,10 +454,11 @@ article footer p {
    ========================================================================== */
 .abstract h3 {
 	color:#faa900;
-	letter-spacing:0.02em;
-	font-size:17px;
+	font-size:1.2em;
+    line-height: 1.5;
 	font-weight:600;
 }
+
 .abstract h4 {
 	font-weight:bold;
 	margin-top:8px;
@@ -401,6 +472,7 @@ article footer p {
     position: relative;
 	float: right;
 	width: 350px;
+    min-width: 350px;
 }
 
 #sidebar .widget {
@@ -413,25 +485,17 @@ article footer p {
     border-color:#ddd #aaa #aaa #ddd;
 }
 
-.widget h2 {
-	font-size:1.6em;
-	text-transform:none;
-	line-height:25px;
-	letter-spacing:0.005em;
-}
-
-
 .widget ol {
-	list-style-type:decimal;
+    list-style: decimal inside;
 	margin: 0;
     padding: 0;
-    list-style-position: inside;
-    font-size: 12px;
 }
 .widget ol li {
 	padding:10px 0;
     border-bottom:1px solid #ddd;
     position: relative;
+    font-size: 0.9em;
+    line-height: 1.5;
 }
 .widget ol li a:link, .widget ol li a:visited {
     position: absolute;
@@ -466,6 +530,7 @@ article footer p {
     padding: 0;
     margin: 0;
 }
+
 /* ==========================================================================
                           Footer section
    ========================================================================== */
@@ -499,12 +564,12 @@ ol#pagination li {
 
 ol#pagination li a, ol#pagination li span {
 	display:inline-block;
-	width:24px;
-	height:24px;
-	margin:0 3px;
-	line-height:24px;
-	font-size:16px;
-	border-radius:999px;
+	width:1.5em;
+	height:1.5em;
+	margin:0 0.25em;
+    line-height: 1.5;
+	font-size:1em;
+    border-radius:999px;
 	color:#fff;
 	text-align:center;
 }

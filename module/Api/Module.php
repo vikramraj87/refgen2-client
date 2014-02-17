@@ -55,20 +55,12 @@ class Module
                         'dispatch.pre',
                         function(Event $event) use($sm) {
                             $logger = $sm->get('DispatchLogger');
-
-                            $params = $event->getParam('data');
-                            $q = array();
-                            foreach($params as $param => $value) {
-                                $q[] = $param . '=' . $value;
-                            }
-                            $data = implode('&', $q);
-                            $url = $event->getParam('url');
-                            $method = $event->getParam('method');
-                            $logger->debug('url: ' . $url . '; method: ' . $method . '; params: ' . $data);
+                            $logger->debug($event->getParam('request'));
                         }
                     );
                     return $service;
                 },
+
                 'DispatchLogger' => function($sm) {
                     $logger = new Logger();
                     $date = new DateTime('NOW');
