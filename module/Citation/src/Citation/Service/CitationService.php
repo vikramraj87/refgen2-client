@@ -315,6 +315,16 @@ class CitationService implements ServiceLocatorAwareInterface
         return isset($collection[$article->getId()]);
     }
 
+    public function isDeletable()
+    {
+        return $this->getActiveCollection()->getId() != null;
+    }
+
+    public function isSavable()
+    {
+        return $this->getActiveCollection()->getId() != null && $this->getActiveCollection()->isChanged();
+    }
+
     /**
      * Gets the session container [Factory for container]
      *
@@ -330,7 +340,7 @@ class CitationService implements ServiceLocatorAwareInterface
 
     /**
      * Factory for Api Service
-     * 
+     *
      * @return ApiService
      */
     protected function getApiService()
