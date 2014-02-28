@@ -1,6 +1,20 @@
 <?php
 use Citation\Service\CitationService;
 return array(
+    'acl' => array(
+        'permissions' => array(
+            'guest' => array(
+                'Citation\Controller\Index' => array(
+                    'add',
+                    'remove'
+                )
+            ),
+            'member' => array(
+                'Citation\Controller\Index'
+            )
+        )
+    )
+    ,
     'router' => array(
         'routes' => array(
             'citation' => array(
@@ -42,7 +56,7 @@ return array(
                     'get' => array(
                         'type' => 'segment',
                         'options' => array(
-                            'route' => '/get[/:id[/:page]]',
+                            'route' => '/get/:id[/:page]',
                             'constraints' => array(
                                 'id' => '\d+',
                                 'page' => '\d+'

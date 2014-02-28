@@ -59,6 +59,7 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
+            __DIR__ . '/../../User/view'
         ),
     ),
     'results' => array(

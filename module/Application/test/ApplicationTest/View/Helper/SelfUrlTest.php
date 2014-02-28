@@ -6,8 +6,6 @@ use ApplicationTest\Bootstrap;
 use PHPUnit_Framework_TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\Router\Http\TreeRouteStack as Router;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\View\Helper\Url;
 
 class SelfUrlTest extends PHPUnit_Framework_TestCase
 {

@@ -139,8 +139,17 @@ class CitationService implements ServiceLocatorAwareInterface
         $id = (int) $id;
         $userId = 1; // should come from session
 
-        $collectionData = $this->getApiService()->getCollection($id, $userId);
+        $response = $this->getApiService()->getCollection($id, $userId);
 
+        if($response['status'] != 'success') {
+            $messages = '';
+            foreach($response['messages'] as $message) {
+                $messages .= implode('; ', $message);
+            }
+            throw new \RuntimeException($messages);
+        }
+
+        $collectionData = $response['collection'];
         if(!isset($collectionData['id'])) {
             throw new \RuntimeException('Invalid data returned from the server');
         }
@@ -315,11 +324,21 @@ class CitationService implements ServiceLocatorAwareInterface
         return isset($collection[$article->getId()]);
     }
 
+    /**
+     * Indicates whether the active collection can be deleted from the database
+     *
+     * @return bool
+     */
     public function isDeletable()
     {
         return $this->getActiveCollection()->getId() != null;
     }
 
+    /**
+     * Indicates whether the changes in the active collection can be saved in the database
+     *
+     * @return bool
+     */
     public function isSavable()
     {
         return $this->getActiveCollection()->getId() != null && $this->getActiveCollection()->isChanged();

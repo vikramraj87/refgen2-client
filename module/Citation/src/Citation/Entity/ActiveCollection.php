@@ -43,6 +43,9 @@ class ActiveCollection extends OrderedList
      */
     public function setCreatedAt($createdAt)
     {
+        if(empty($createdAt)) {
+            $createdAt = null;
+        }
         if(is_string($createdAt)) {
             $createdAt = new DateTime($createdAt);
         }
@@ -94,6 +97,9 @@ class ActiveCollection extends OrderedList
      */
     public function setUpdatedAt($updatedAt)
     {
+        if(empty($updatedAt)) {
+            $updatedAt = null;
+        }
         if(is_string($updatedAt)) {
             $updatedAt = new DateTime($updatedAt);
         }

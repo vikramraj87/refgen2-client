@@ -14,6 +14,7 @@ use Citation\Form\CitationFilter;
 use Citation\Service\CitationService;
 use Citation\Entity\Collection;
 
+use \RuntimeException;
 
 //todo: remove invalid server response exception
 class IndexController extends AbstractActionController
@@ -119,9 +120,9 @@ class IndexController extends AbstractActionController
     public function getAction()
     {
         $page = $this->params()->fromRoute('page');
-
+        $id   = $this->params()->fromRoute('id');
         $service = $this->getCitationService();
-        $collection = $service->getCollection(1);
+        $collection = $service->getCollection($id);
 
         if(!$collection instanceof Collection) {
             throw new \RuntimeException('Invalid data returned from the server');
@@ -140,7 +141,7 @@ class IndexController extends AbstractActionController
                 $adapter = new ArrayAdapter($collection->getArticles());
                 $paginator = new Paginator($adapter);
                 $paginator->setCurrentPageNumber($page);
-                $paginator->setItemCountPerPage(20);
+                $paginator->setItemCountPerPage(10);
                 $viewModel->paginator = $paginator;
             }
         } else {
@@ -213,7 +214,7 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         if(!$request->isPost()) {
             $collection = $this->getCitationService()->getActiveCollection();
-            $message = "Do you want to delete the list \"" . $collection->getName() . "\"";
+            $message = "Do you want to delete the list \"" . $collection->getName() . "\"?";
             return $this->displayConfirm($message, $redirect);
         }
 
@@ -223,7 +224,7 @@ class IndexController extends AbstractActionController
         }
 
         $response = $this->getCitationService()->deleteCollection();
-        return $this->redirect()->toUrl($redirect);
+        return $this->redirect()->toUrl('/');
     }
 
     protected function displayConfirm($message = '', $redirect = '/')

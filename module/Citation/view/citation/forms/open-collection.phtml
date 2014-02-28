@@ -10,6 +10,6 @@ use Zend\Form\Form;
     <p><?php echo $this->formLabel($form->get('id')); ?></p>
     <p><?php echo $this->formElement($form->get('id')); ?></p>
     <p><?php echo $this->formElementErrors($form->get('id')); ?></p>
-    <p><?php echo $this->formElement($form->get('action-open')); ?>
+    <p class="button-wrapper"><?php echo $this->formElement($form->get('action-open')); ?>
        <?php echo $this->formElement($form->get('action-cancel')); ?></p>
 <?php echo $this->form()->closeTag(); ?>

@@ -1,0 +1,89 @@
+/* ==========================================================================
+                        General layout elements
+   ========================================================================== */
+
+/**
+ * To keep the footer at the bottom,
+ * [1] Minimum height of the container is made 100%
+ * [2] Position made relative to absolutely position the footer
+ */
+#container {
+  min-height: 100%;       /* 1 */
+  position: relative;     /* 2 */
+}
+
+/**
+ * To keep the content not overlapping the footer, give
+ * [1] padding bottom for the content equal to greater than height of footer
+ */
+#content {
+  padding-bottom: $footerHeight + 1em;  /* 1 */
+  margin-top: 1em;
+  width: 100%;
+  display: table;
+}
+
+/**
+ * Prevent the footer from expanding or contracting with change in browser
+ * font size by
+ * [1] setting the font-size to pixel value
+ */
+#page-footer {
+  width: 100%;
+  height: $footerHeight;
+  font-size: 16px;                  /* 1 */
+  position: absolute;
+  bottom:0;
+  left:0;
+}
+
+/* ==========================================================================
+         Two column [Fixed sidebar and flexible main content
+   ========================================================================== */
+
+#main, #side {
+  padding:0em 2em;
+}
+
+#main {
+  display: table-cell;
+}
+
+#side {
+  display: table-cell;
+  width: $sidebarWidth;
+  border-left:1px dotted #666;
+  @include borderBox;
+}
+
+/* ==========================================================================
+                        Index page layout
+   ========================================================================== */
+
+#index {
+  padding:0;
+  margin:0;
+  .row {
+    margin:2em 0;
+    .col {
+      padding:1em 1.5em;
+      width:43%;
+      @include borderBox;
+    }
+  }
+}
+
+/*
+@media screen and (max-width:768px) {
+  body {
+    min-width: 768px;
+  }
+  #content {
+    display: block;
+    box-sizing: content-box;
+  }
+  #main, #side {
+    display: block;
+  }
+}
+*/

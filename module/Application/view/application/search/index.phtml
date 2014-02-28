@@ -2,7 +2,7 @@
     <?php $articles = $this->paginator; ?>
 
     <?php foreach($articles as $article): ?>
-        <?php echo $this->partial('application/search/_article.phtml', array(
+        <?php echo $this->partial('partials/_article-mini.phtml', array(
             'article' => $article,
             'term'    => $this->term
         )); ?>

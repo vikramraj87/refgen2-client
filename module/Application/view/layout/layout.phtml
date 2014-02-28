@@ -18,12 +18,13 @@
         </div> <!-- #search -->
     </header>
 
-    <div id="body" class="clearfix">
+    <div id="content">
+        <div id="main">
+            <?php echo $this->content; ?>
+        </div>
         <div id="side">
             <?php echo $this->citations()->render(); ?>
         </div>
-        <div id="content">
-            <?php echo $this->content; ?>
-        </div>
     </div>
+
 <?php echo $this->partial('layout/_foot.phtml');

@@ -8,7 +8,7 @@
     <p><?php echo $this->formLabel($form->get('name')); ?></p>
     <p><?php echo $this->formElement($form->get('name')); ?></p>
     <p><?php echo $this->formElementErrors($form->get('name')); ?></p>
-    <p><?php echo $this->formElement($form->get('action-save')); ?>
+    <p class="button-wrapper"><?php echo $this->formElement($form->get('action-save')); ?>
        <?php echo $this->formElement($form->get('action-cancel')); ?></p>
 <?php
     echo $this->form()->closeTag();

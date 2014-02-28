@@ -1,26 +1,13 @@
-$color: #333;
-$backgroundColor: #fff;
-$linkColor: #faa900;
-
-$fontStack: "Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-
-
-@mixin fontSmooth {
-  font-smooth: always;
-  -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 html,
 body{
-  width: 100%;
-  min-width: 1024px;
-  height: 100%;
+      width: 100%;
+  min-width: $minContainerWidth;
+     height: 100%;
+
   font-family:$fontStack;
   color:$color;
-  margin:0 0 1px;
   line-height: 1.5;
+
   background-color:$backgroundColor;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
   text-rendering: optimizeLegibility;
@@ -58,4 +45,67 @@ h3 {
 
 h4 {
   line-height: 1.2;
+}
+
+input[type=submit] {
+  /*box-shadow*/
+  @include boxShadow(inset 0 0.125em 0 0 #ffffff);
+
+  /*background*/
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
+  background:-moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+  background:-webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+  background:-o-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+  background:-ms-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+  background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9',GradientType=0);
+  background-color:#f9f9f9;
+
+  /*borderstyles*/
+  @include borderRadius(0.5em);
+  border:0.125em solid #dcdcdc;
+
+  cursor:pointer;
+  padding:0.372em 1.5em;
+  outline:none;
+
+  /*font-styles*/
+  color:#333;
+  font-family: $fontStack;
+  letter-spacing: -0.05em;
+  font-size:1em;
+  font-weight:bold;
+  text-shadow:0px 1px 0px #ffffff;
+
+  &:hover {
+    background-color:#e9e9e9;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
+    background:-moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    background:-webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    background:-o-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    background:-ms-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9',GradientType=0);
+
+    @include boxShadow(inset 0 -0.125em 0 0 #fff);
+  }
+
+  &:active {
+    position:relative;
+    top:1px;
+  }
+}
+
+input[type=text], input[type=email], input[type=password] {
+  border-top:1px solid #bbb;
+  border-right:1px solid #ccc;
+  border-left:1px solid #ccc;
+  border-bottom:1px solid #ddd;
+  outline:none;
+  margin:0 0 0 0.5em;
+  width:18em;
+  padding:0.5em 0.5em;
+  @include borderRadius(0.5em);
+  @include boxShadow(inset 0 1px 2px 0 #ccc);
+
 }

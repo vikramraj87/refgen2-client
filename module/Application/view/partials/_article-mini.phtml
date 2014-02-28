@@ -34,15 +34,17 @@
                         <?php $addUrl .= '?redirect=' . $redirectUrl; ?>
                     <a href="<?php echo $addUrl; ?>">Add to list</a>
                 </p>
+                <?php else: ?>
+                <p class="remove-from-list">
+                    <?php $redirectUrl = $this->url('search', array('term' => $this->term)); ?>
+                    <?php $delUrl = $this->url('citation/remove', array('id' => $id)); ?>
+                    <?php $delUrl .= '?redirect=' . $redirectUrl; ?>
+                    <a href="<?php echo $delUrl; ?>">Remove from list</a>
+                </p>
                 <?php endif; ?>
             </div>
             <footer>
-
                 <p class="pmid"><b>PMID:</b> <a href="http://www.ncbi.nlm.nih.gov/pubmed/<?php echo $id; ?>" target="_blank"><?php echo $id; ?></a></p>
                 <p class="citation"><b>Cite by:</b> <?php echo $article->getCitation(); ?></p>
-
-
-
-
             </footer>
         </article>

@@ -2,8 +2,10 @@
         <div>
             <p><?php echo $this->message; ?></p>
             <form action="<?php echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?redirect=' . $this->redirect; ?>" method="post">
+                <p class="button-wrapper">
                 <input type="submit" name="action" id="action-yes" value="Yes"/>
                 <input type="submit" name="action" id="action-no"  value="No"/>
+                </p>
             </form>
         </div>
 

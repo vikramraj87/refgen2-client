@@ -26,6 +26,7 @@ class ApiService
         'pubmed_single'     => 'pubmed/id/:id',
         'collection'        => 'collection/user/:user_id/:id',
         'collection_user'   => 'collection/user/:user_id',
+        'login'             => 'user/login'
     );
 
     /** @var EventManager */
@@ -143,6 +144,16 @@ class ApiService
         );
         $path = strtr($this->paths['collection'], $vars);
         return $this->doRequest($path, array(), Request::METHOD_DELETE);
+    }
+
+    public function authenticate($email, $password)
+    {
+        $data = array(
+            'email' => $email,
+            'password' => $password
+        );
+        $path = $this->paths['login'];
+        return $this->doRequest($path, $data, Request::METHOD_POST);
     }
 
     /**

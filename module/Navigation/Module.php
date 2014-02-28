@@ -4,9 +4,12 @@ namespace Navigation;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Application;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Navigation\Navigation;
+use Zend\Navigation\Navigation,
+    Zend\View\HelperPluginManager,
+    Zend\View\Helper\Navigation as NavigationHelper;
 
-use Citation\Service\CitationService;
+use Citation\Service\CitationService,
+    Acl\Service\AclService;
 
 class Module
 {
@@ -67,6 +70,28 @@ class Module
         return array(
             'factories' => array(
                 'Navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory'
+            )
+        );
+    }
+
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'navigation' => function(HelperPluginManager $pm) {
+                    /** @var ServiceManager $sm */
+                    $sm = $pm->getServiceLocator();
+
+                    /** @var AclService $aclService */
+                    $aclService = $sm->get('Acl\Service\Acl');
+
+                    /** @var NavigationHelper $navigation */
+                    $navigation = $pm->get('Zend\View\Helper\Navigation');
+
+                    $navigation->setAcl($aclService->getAcl())
+                               ->setRole($aclService->getRole());
+                    return $navigation;
+                }
             )
         );
     }

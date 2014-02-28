@@ -2,9 +2,9 @@
 <div id="container">
     <header id="page-header" class="clearfix">
         <nav>
+            <?php $this->navigation('Navigation')->removePage(0); ?>
             <?php echo $this->navigation('Navigation')->menu(); ?>
         </nav>
-
         <div id="logo">
             <h1>K<sub>V</sub></h1>
             <h2><a href="/">Reference generator</a></h2>

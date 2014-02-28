@@ -2,12 +2,11 @@
     <?php $collection = $this->collection; ?>
     <?php $articles   = $this->paginator; ?>
     <?php $title      = $collection->getName(); ?>
+    <h1 class="section-title"><?php echo $title; ?></h1>
     <?php foreach($articles as $article): ?>
-        <?php echo $this->partial('citation/index/_article.phtml', array(
-            'article' => $article,
-            'title'   => $title
+        <?php echo $this->partial('partials/_article-mini.phtml', array(
+            'article' => $article
         )); ?>
-        <?php $title = null; ?>
     <?php endforeach; ?>
 
     <?php echo $this->paginationControl(

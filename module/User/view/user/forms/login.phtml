@@ -1,0 +1,21 @@
+<?php
+    /** @var \Zend\Form\Form $form */
+    $form = $this->form;
+    $action = $_SERVER['REQUEST_URI'];
+    $form->setAttribute('action', $action);
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+?>
+    <p class="label"><?php echo $this->formLabel($form->get('email')); ?></p>
+    <p><?php echo $this->formElement($form->get('email')); ?></p>
+    <p><?php echo $this->formElementErrors($form->get('email')); ?></p>
+
+    <p class="label"><?php echo $this->formLabel($form->get('password')); ?></p>
+    <p><?php echo $this->formElement($form->get('password')); ?></p>
+    <p><?php echo $this->formElementErrors($form->get('password')); ?></p>
+
+    <p class="button-wrapper"><?php echo $this->formElement($form->get('action-login')); ?>
+                              <?php echo $this->formElement($form->get('action-cancel')); ?></p>
+<?php
+    echo $this->form()->closeTag();

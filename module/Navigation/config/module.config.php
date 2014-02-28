@@ -19,39 +19,49 @@ if(!empty($queryStr) && $url == '/search') {
 }
 $redirectUrl = $url;
 
-//$redirectUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 return array(
     'navigation' => array(
         'default' => array(
             'citation' => array(
                 'label' => 'Citations',
                 'title' => 'Manage citations',
-                'route' => 'citation/get',
+                'uri' => '#',
+                'resource' => 'Citation\Controller\Index',
                 'pages' => array(
                     'new_list' => array(
                         'label' => 'New list',
                         'title' => 'Clear the existing list and create a blank list',
-                        'uri'   => '/citation/new?redirect=' . $redirectUrl
+                        'uri'   => '/citation/new?redirect=' . $redirectUrl,
+                        'resource' => 'Citation\Controller\Index',
+                        'privilege' => 'new'
                     ),
                     'open_list' => array(
                         'label' => 'Open list',
                         'title' => 'Open an existing list of articles',
-                        'uri'   => '/citation/open?redirect=' . $redirectUrl
+                        'uri'   => '/citation/open?redirect=' . $redirectUrl,
+                        'resource' => 'Citation\Controller\Index',
+                        'privilege' => 'open'
                     ),
                     'save_list' => array(
                         'label' => 'Save list',
                         'title' => 'Save changes to the active list',
-                        'uri'   => '/citation/save?redirect=' . $redirectUrl
+                        'uri'   => '/citation/save?redirect=' . $redirectUrl,
+                        'resource' => 'Citation\Controller\Index',
+                        'privilege' => 'save'
                     ),
                     'save_list_as' => array(
                         'label' => 'Save list as',
                         'title' => 'Save the active list in different/new name',
-                        'uri'   => '/citation/save-as?redirect=' . $redirectUrl
+                        'uri'   => '/citation/save-as?redirect=' . $redirectUrl,
+                        'resource' => 'Citation\Controller\Index',
+                        'privilege' => 'save-as'
                     ),
                     'delete_list' => array(
                         'label' => 'Delete list',
                         'title' => 'Delete the active list permanently',
-                        'uri'   => '/citation/delete?redirect=' . $redirectUrl
+                        'uri'   => '/citation/delete?redirect=' . $redirectUrl,
+                        'resource' => 'Citation\Controller\Index',
+                        'privilege' => 'delete'
                     )
                 ),
             ),
@@ -60,14 +70,23 @@ return array(
                 'title' => 'Manage your account',
                 'uri'   => '/user/profile',
                 'pages' => array(
-                    'profile' => array(
-                        'label' => 'Profile',
-                        'title' => 'Edit/View your profile',
-                        'uri' => 'user/profile'
+                    'login' => array(
+                        'label' => 'Log In',
+                        'uri' => 'user/login',
+                        'resource' => 'User\Controller\User',
+                        'privilege' => 'login'
                     ),
                     'logout' => array(
                         'label' => 'Log Out',
-                        'uri' => 'user/logout'
+                        'uri' => 'user/logout',
+                        'resource' => 'User\Controller\User',
+                        'privilege' => 'logout'
+                    ),
+                    'register' => array(
+                        'label' => 'Register',
+                        'uri' => 'user/sign-up',
+                        'resource' => 'User\Controller\User',
+                        'privilege' => 'sign-up'
                     )
                 )
             )

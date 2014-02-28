@@ -1,12 +1,16 @@
 <?php
 namespace Api;
 use Api\Service\ApiService;
+
 use Zend\Http\Client;
 use Zend\Session\Container;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
-use \DateTime;
 use Zend\EventManager\Event;
+use Zend\Http\Client\Adapter\Curl;
+
+use \DateTime;
+
 
 class Module
 {
@@ -25,11 +29,10 @@ class Module
     {
         return array(
             'api' => array(
-                'host' => 'http://api.refgen.loc'
+                'host' => 'http://api.rg.loc'
             )
         );
     }
-
     public function getServiceConfig()
     {
         return array(
@@ -45,6 +48,7 @@ class Module
                     $client->setOptions(array(
                         'timeout' => 20
                     ));
+
 
                     $service = new ApiService();
                     $service->setHost($host)

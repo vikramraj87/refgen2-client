@@ -30,11 +30,18 @@ class ApiServiceTest extends PHPUnit_Framework_TestCase
         $this->service->setCacheContainer(new Container('cache_results'));
     }
 
-    public function testReturnUrl()
+    public function testAuthentication()
     {
-        $result = $this->service->search('ca cervix', 2);
-        var_dump($result);
-        $result = $this->service->getArticle(2);
-        var_dump($result);
+        $response = $this->service->authenticate('dr.vikramraj87@gmail.com', 'K1rth1k@s1n1');
+
+        $this->assertEquals('success', $response['status']);
+        $userData = $response['user'];
+        $this->assertEquals('dr.vikramraj87@gmail.com', $userData['email']);
+    }
+    public function testAuthenticationWrong()
+    {
+        $response = $this->service->authenticate('dr.vikramraj87@gmail.com', 'K1rth1k@s1n');
+
+        $this->assertEquals('failure', $response['status']);
     }
 } 
