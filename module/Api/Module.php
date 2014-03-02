@@ -29,7 +29,9 @@ class Module
     {
         return array(
             'api' => array(
-                'host' => 'http://api.rg.loc'
+                'host' => 'http://api.rg.loc',
+                'client-id' => 'web-client',
+                'client-secret' => 'secret'
             )
         );
     }
@@ -44,6 +46,10 @@ class Module
 
                     $container = new Container('results_cache');
 
+                    /** @var Container $authContainer */
+                    $authContainer = new Container('oauth');
+
+
                     $client = new Client();
                     $client->setOptions(array(
                         'timeout' => 20
@@ -53,7 +59,10 @@ class Module
                     $service = new ApiService();
                     $service->setHost($host)
                             ->setClient($client)
-                            ->setCacheContainer($container);
+                            ->setCacheContainer($container)
+                            ->setAuthContainer($authContainer)
+                            ->setClientId($config['api']['client-id'])
+                            ->setClientSecret($config['api']['client-secret']);
 
                     $service->events()->attach(
                         'dispatch.pre',
@@ -62,6 +71,7 @@ class Module
                             $logger->debug($event->getParam('request'));
                         }
                     );
+
                     return $service;
                 },
 

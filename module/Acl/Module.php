@@ -1,9 +1,42 @@
 <?php
 namespace Acl;
 
+use Zend\Mvc\MvcEvent,
+    Zend\Mvc\Router\RouteMatch;
+
 use Acl\Service\AclService;
 
 class Module {
+    public function onBootstrap(MvcEvent $e)
+    {
+        $events = $e->getApplication()
+                    ->getEventManager();
+        $events->attach('route', array($this, 'checkAcl'));
+    }
+
+    public function checkAcl(MvcEvent $e)
+    {
+        $app = $e->getApplication();
+        $sm = $app->getServiceManager();
+
+        /** @var AclService $aclService */
+        $aclService = $sm->get('Acl\Service\Acl');
+
+        /** @var RouteMatch $routeMatch */
+        $routeMatch = $e->getRouteMatch();
+
+        $resource = $routeMatch->getParam('controller');
+        $privilege = $routeMatch->getParam('action');
+
+        if($aclService->getAcl()->hasResource($resource)) {
+            if(!$aclService->hasAccess($resource, $privilege)) {
+                $response = $e->getResponse();
+                $response->setStatusCode(404);
+                return;
+            }
+        }
+    }
+
     public function getConfig()
     {
         return array();

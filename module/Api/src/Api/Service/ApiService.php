@@ -20,14 +20,21 @@ class ApiService
     /** @var Container */
     protected $container = null;
 
+    /** @var Container */
+    protected $authContainer = null;
+
     /** @var array */
     protected $paths = array(
         'pubmed_search'     => 'pubmed/term/:term/:page',
         'pubmed_single'     => 'pubmed/id/:id',
         'collection'        => 'collection/user/:user_id/:id',
         'collection_user'   => 'collection/user/:user_id',
-        'login'             => 'user/login'
+        'login'             => 'user/login',
+        'client_auth'       => 'client'
     );
+
+    protected $clientId;
+    protected $clientSecret;
 
     /** @var EventManager */
     protected $events = null;
@@ -156,6 +163,31 @@ class ApiService
         return $this->doRequest($path, $data, Request::METHOD_POST);
     }
 
+    protected function getAccessToken()
+    {
+        if(!$this->authContainer instanceof Container) {
+            throw new \RuntimeException('AuthContainer not set');
+        }
+
+        if(!isset($this->authContainer->accessToken)) {
+            $path = $this->paths['client_auth'];
+            $data = array(
+                'grant_type' => 'client_credentials',
+                'client_id'  => $this->clientId,
+                'client_secret' => $this->clientSecret
+            );
+            $result = $this->doRequest($path, $data, Request::METHOD_POST);
+            if(is_array($result)
+                && isset($result['access_token'])
+                && !empty($result['access_token'])
+            ) {
+                $this->authContainer->setExpirationSeconds($result['expires_in'] - 300);
+                $this->authContainer->accessToken = $result['access_token'];
+            }
+        }
+        return $this->authContainer->accessToken;
+    }
+
     /**
      * @param Client $client
      * @return $this
@@ -186,13 +218,36 @@ class ApiService
         return $this;
     }
 
+    public function setAuthContainer(Container $container)
+    {
+        $this->authContainer = $container;
+        return $this;
+    }
+
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+        return $this;
+    }
+
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+        return $this;
+    }
+
     protected function doRequest($path, $data = array(), $method = Request::METHOD_GET)
     {
         if($this->client === null) {
             throw new \RuntimeException('Client not set in Api Service');
         }
+
         if($this->host === '') {
             throw new \RuntimeException('Host not set in Api Service');
+        }
+
+        if($path != $this->paths['client_auth']) {
+            $path .= '?access_token=' . $this->getAccessToken();
         }
 
         $url = $this->host . '/' . ltrim($path, '/');
@@ -225,6 +280,9 @@ class ApiService
             $resArray = Json::decode($response->getBody(), Json::TYPE_ARRAY);
             if(!is_array($resArray)) {
                 throw new \RuntimeException('Invalid data returned from the server');
+            }
+            if(array_key_exists('error', $resArray)) {
+                throw new \RuntimeException('Server communication error');
             }
             return $resArray;
         }

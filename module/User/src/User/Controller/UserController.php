@@ -61,8 +61,10 @@ class UserController extends AbstractActionController
 
     public function logoutAction()
     {
-        $this->getAuthService()->clearIdentity();
-        return $this->redirect()->toUrl('/');
+        if($this->getAuthService()->hasIdentity()) {
+            $this->getAuthService()->clearIdentity();
+            return $this->redirect()->toUrl('/');
+        }
     }
 
     protected function getAuthService()

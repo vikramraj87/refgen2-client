@@ -47,15 +47,17 @@ return array(
         ),
     ),
     'view_manager' => array(
-        'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'not_found_template'       => 'error/404',
-        'exception_template'       => 'error/index',
+        //'display_not_found_reason' => true,
+        //'display_exceptions'       => true,
+        //'not_found_template'       => 'error/404',
+        //'exception_template'       => 'error/index',
         'template_map' => array(
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'layout/main'             => __DIR__ . '/../view/layout/main.phtml',
-            'error/404'               => __DIR__ . '/../view/error/404.phtml',
-            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+            'layout/single'           => __DIR__ . '/../view/layout/single.phtml',
+            'layout/error'            => __DIR__ . '/../view/layout/single.phtml'
+            //'error/404'               => __DIR__ . '/../view/error/404.phtml',
+            //'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
